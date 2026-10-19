@@ -4,6 +4,14 @@ A comprehensive AI Virtual Office platform featuring intelligent agents, lead ge
 
 ---
 
+### 🚀 Live Website
+[![Live Demo on Netlify](https://img.shields.io/badge/Live_Demo-aiverchualoffice.netlify.app-00C7B7?style=for-the-badge&logo=netlify&logoColor=white)](https://aiverchualoffice.netlify.app/)
+[![GitHub Repo](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/avinashtiwariji90-byte/AI-VERCHUAL-OFFICE)
+
+👉 **Experience the Live App:** [https://aiverchualoffice.netlify.app/](https://aiverchualoffice.netlify.app/)
+
+---
+
 ## ⚡ Quick Start (Recommended)
 
 Simply double-click the startup script:
