@@ -1,0 +1,20 @@
+# Large Binaries
+cloudflared.exe
+*.exe
+
+# Logs
+*.log
+server.log
+tunnel_live.log
+tunnel_output.log
+
+# Temporary runtime states
+tunnel_state.json
+api/tunnel_state.json
+deploy_netlify/tunnel_state.json
+
+# IDE & OS
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store

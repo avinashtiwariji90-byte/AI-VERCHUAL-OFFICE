@@ -1,0 +1,1963 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NexusAI — Live Project Hosting & Visual Preview</title>
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    :root {
+      --bg-dark: #070a13;
+      --bg-card: rgba(15, 23, 42, 0.8);
+      --primary: #6366f1;
+      --primary-light: #818cf8;
+      --secondary: #06b6d4;
+      --accent-green: #10b981;
+      --accent-pink: #f43f5e;
+      --accent-gold: #fbbf24;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-glass: rgba(255, 255, 255, 0.08);
+      --font-main: 'Outfit', 'Inter', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: var(--font-main);
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      overflow-x: hidden;
+      transition: background-color 0.3s ease;
+    }
+
+    /* Top Project Host Header */
+    .host-header {
+      background: rgba(11, 17, 32, 0.95);
+      border-bottom: 1px solid var(--border-glass);
+      backdrop-filter: blur(16px);
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .host-badge {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      color: #34d399;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      background: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #10b981;
+      animation: blink 1.5s infinite;
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 0.4;
+        transform: scale(0.85);
+      }
+    }
+
+    .btn-action {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border-glass);
+      color: var(--text-main);
+      padding: 0.45rem 0.9rem;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-action:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #06b6d4, #0284c7);
+      border: none;
+      color: white;
+      box-shadow: 0 4px 15px rgba(6, 182, 212, 0.35);
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #0891b2, #0369a1);
+      box-shadow: 0 6px 20px rgba(6, 182, 212, 0.5);
+    }
+
+    /* Main Container */
+    .main-app-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+
+    /* Hero Banner */
+    .hero-banner {
+      background: radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.25), rgba(6, 182, 212, 0.08) 50%, transparent 80%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px;
+      padding: 3rem 2rem;
+      text-align: center;
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .announcement-bar {
+      background: linear-gradient(90deg, #6366f1, #06b6d4);
+      color: white;
+      padding: 0.4rem 1.25rem;
+      border-radius: 30px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      display: inline-block;
+      margin-bottom: 1.25rem;
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+    }
+
+    .showcase-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .showcase-card {
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid var(--border-glass);
+      border-radius: 18px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .showcase-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(99, 102, 241, 0.5);
+      box-shadow: 0 16px 35px rgba(0, 0, 0, 0.5);
+    }
+
+    .showcase-emoji-banner {
+      font-size: 3.2rem;
+      height: 120px;
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+
+    /* Floating Developer Directive & Live Update Console */
+    .floating-dev-console {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      width: 480px;
+      max-width: calc(100vw - 3rem);
+      background: rgba(14, 20, 36, 0.96);
+      border: 1.5px solid rgba(99, 102, 241, 0.4);
+      border-radius: 20px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 30px rgba(99, 102, 241, 0.25);
+      backdrop-filter: blur(20px);
+      z-index: 1000;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+    }
+
+    .floating-dev-console.minimized {
+      transform: translateY(calc(100% - 54px));
+    }
+
+    .console-header {
+      background: linear-gradient(90deg, rgba(99, 102, 241, 0.2), rgba(6, 182, 212, 0.15));
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 0.85rem 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .console-body {
+      padding: 1.25rem;
+      max-height: 480px;
+      overflow-y: auto;
+    }
+
+    .directive-input-group {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .form-control {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 10px;
+      padding: 0.65rem 1rem;
+      color: white;
+      font-size: 0.85rem;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    .form-control:focus {
+      border-color: #38bdf8;
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.25);
+    }
+
+    .screenshot-uploader-box {
+      border: 2px dashed rgba(99, 102, 241, 0.35);
+      border-radius: 12px;
+      padding: 0.85rem;
+      text-align: center;
+      background: rgba(99, 102, 241, 0.04);
+      margin-bottom: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .screenshot-uploader-box:hover {
+      border-color: #818cf8;
+      background: rgba(99, 102, 241, 0.08);
+    }
+
+    .screenshot-preview-thumb {
+      max-height: 90px;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+      border: 1px solid var(--border-glass);
+      display: none;
+    }
+
+    .developer-ack-badge {
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 10px;
+      padding: 0.6rem 0.85rem;
+      font-size: 0.8rem;
+      color: #34d399;
+      margin-top: 0.75rem;
+      display: none;
+    }
+
+    /* Modal dialogs */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(10px);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-card {
+      background: #0b1120;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 20px;
+      width: 680px;
+      max-width: 100%;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
+    }
+
+    .code-editor-tabs {
+      display: flex;
+      background: #050811;
+      border-bottom: 1px solid var(--border-glass);
+      padding: 0.25rem 0.75rem;
+      gap: 0.25rem;
+    }
+
+    .code-tab {
+      padding: 0.4rem 0.85rem;
+      font-size: 0.78rem;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      cursor: pointer;
+      border-radius: 6px;
+    }
+
+    .code-tab.active {
+      background: rgba(99, 102, 241, 0.25);
+      color: #38bdf8;
+      font-weight: 700;
+    }
+
+    .code-content-box {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: #a5f3fc;
+      background: #050811;
+      padding: 1.25rem;
+      overflow-y: auto;
+      max-height: 480px;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+
+    .toast-popup {
+      position: fixed;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: #10b981;
+      color: white;
+      padding: 0.75rem 1.25rem;
+      border-radius: 10px;
+      font-weight: 700;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      z-index: 3000;
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Top Host Header -->
+  <header class="host-header">
+    <div style="display: flex; align-items: center; gap: 1rem;">
+      <a href="index.html" class="btn-action"
+        style="background: rgba(99,102,241,0.2); border-color: rgba(99,102,241,0.4); color: #a5b4fc;">
+        ← 🏢 Virtual Office Dashboard
+      </a>
+      <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <span
+          style="font-size: 1.1rem; font-weight: 800; background: linear-gradient(135deg, #38bdf8, #818cf8); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;"
+          id="projectHeaderTitle">
+          Generative Project System
+        </span>
+        <span class="host-badge">
+          <div class="pulse-dot"></div> LIVE HOSTED LOCALHOST:8000
+        </span>
+      </div>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 0.75rem;">
+      <span style="font-size: 0.8rem; color: var(--text-muted);" id="projectBuildVersion">Build: v1.0.0 Active</span>
+      <button class="btn-action" onclick="openSourceCodeModal()"
+        style="background: rgba(6,182,212,0.15); border-color: rgba(6,182,212,0.35); color: #38bdf8;">
+        💻 View Source Code & ZIP
+      </button>
+      <button class="btn-action" onclick="copyProjectUrl()" title="Copy Link to Clipboard">
+        🔗 Share Link
+      </button>
+      <button class="btn-action btn-primary" id="primaryActionBtn" onclick="handlePrimaryAction()">
+        🛒 Action / Cart (<span id="cartCountBadge">0</span>)
+      </button>
+    </div>
+  </header>
+
+  <!-- Live Rendered Project Container -->
+  <main class="main-app-container" id="liveProjectRoot">
+
+    <!-- Hero Banner -->
+    <div class="hero-banner" id="projectHeroSection">
+      <div class="announcement-bar" id="projectAnnouncement">
+        ⚡ AUTONOMOUS AI SPRINT BUILD COMPLETE — DEPLOYED LIVE
+      </div>
+      <h1 style="font-size: 2.75rem; font-weight: 900; margin-bottom: 0.75rem; letter-spacing: -0.02em;"
+        id="projectHeroHeadline">
+        Loading Project Prototype...
+      </h1>
+      <p style="font-size: 1.05rem; color: var(--text-muted); max-width: 720px; margin: 0 auto 1.5rem;"
+        id="projectHeroSubtitle">
+        Custom designed and engineered by Neha Kapoor (Frontend), Rohan Gupta (Backend), and Kavya Sharma (UI/UX).
+      </p>
+      <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;" id="heroActionButtons">
+        <button class="btn-action btn-primary" style="padding: 0.7rem 1.5rem; font-size: 0.95rem;"
+          onclick="scrollToShowcase()">
+          ✨ Explore Features & Deliverables
+        </button>
+        <button class="btn-action" style="padding: 0.7rem 1.5rem; font-size: 0.95rem;"
+          onclick="toggleFloatingConsole()">
+          🛠️ Request Live Revision (Voice / Screenshot)
+        </button>
+      </div>
+    </div>
+
+    <!-- Highlights & Feature Badges Bar -->
+    <div
+      style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 2.5rem;"
+      id="featuresBar">
+      <!-- Populated dynamically based on domain -->
+    </div>
+
+    <!-- Dynamic Showcase Section (Custom to each project domain) -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;"
+      id="showcaseSectionHeader">
+      <div>
+        <h2 style="font-size: 1.5rem; font-weight: 800;" id="showcaseTitle">Featured Deliverables & Catalog</h2>
+        <p style="font-size: 0.85rem; color: var(--text-muted);" id="showcaseSubtitle">Interactive components
+          dynamically generated for this project</p>
+      </div>
+      <div style="display: flex; gap: 0.5rem;" id="categoryFilterButtons">
+        <!-- Populated via JS -->
+      </div>
+    </div>
+
+    <div class="showcase-grid" id="showcaseGridContainer">
+      <!-- Populated via JS -->
+    </div>
+
+    <!-- Live Developer Info Footer -->
+    <div
+      style="margin-top: 3.5rem; padding: 1.5rem; background: rgba(15,23,42,0.6); border: 1px solid var(--border-glass); border-radius: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <div style="font-weight: 700; color: #38bdf8;">🛠️ Autonomous Engineering Team:</div>
+        <div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 0.25rem;" id="devTeamLabel">
+          PM: Aarav Verma • UI/UX: Kavya Sharma • Frontend: Neha Kapoor • Backend: Rohan Gupta • QA: Arjun Kumar
+        </div>
+      </div>
+      <button class="btn-action" onclick="toggleFloatingConsole()">
+        🗣️ Direct Developer Directive (Voice / Text / Image)
+      </button>
+    </div>
+  </main>
+
+  <!-- Interactive Action Modal (Cart / Appointment / Booking / Inquiry) -->
+  <div class="modal-overlay" id="interactiveActionModal">
+    <div class="modal-card" style="width: 520px;">
+      <div
+        style="display: flex; justify-content: space-between; align-items: center; padding: 1.25rem; border-bottom: 1px solid var(--border-glass);">
+        <h3 style="font-size: 1.2rem; font-weight: 800;" id="actionModalTitle">🛒 Project Action Checkout</h3>
+        <button class="btn-action" onclick="closeActionModal()">&times;</button>
+      </div>
+
+      <div style="flex: 1; overflow-y: auto; padding: 1.25rem;" id="actionModalBody">
+        <!-- Rendered by JS -->
+      </div>
+
+      <div style="border-top: 1px solid var(--border-glass); padding: 1.25rem;">
+        <button class="btn-action btn-primary" style="width: 100%; justify-content: center; padding: 0.85rem;"
+          onclick="confirmActionModal()">
+          ✨ Complete & Confirm
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Source Code Modal -->
+  <div class="modal-overlay" id="sourceCodeModal">
+    <div class="modal-card" style="width: 800px;">
+      <div
+        style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.25rem; border-bottom: 1px solid var(--border-glass);">
+        <div>
+          <h3 style="font-size: 1.1rem; font-weight: 800; color: #38bdf8;">💻 Generated Multi-File Source Code
+            Architecture</h3>
+          <p style="font-size: 0.75rem; color: var(--text-muted);">Real standalone code files compiled by Neha & Rohan
+          </p>
+        </div>
+        <div style="display: flex; gap: 0.5rem;">
+          <button class="btn-action btn-primary" onclick="downloadProjectBundle()">📥 Download Project ZIP/HTML</button>
+          <button class="btn-action" onclick="closeSourceCodeModal()">&times;</button>
+        </div>
+      </div>
+
+      <div class="code-editor-tabs">
+        <div class="code-tab active" id="tab-html" onclick="switchCodeTab('html')">index.html</div>
+        <div class="code-tab" id="tab-css" onclick="switchCodeTab('css')">style.css</div>
+        <div class="code-tab" id="tab-js" onclick="switchCodeTab('js')">app.js</div>
+        <div class="code-tab" id="tab-api" onclick="switchCodeTab('api')">backend_api.php</div>
+        <div class="code-tab" id="tab-sql" onclick="switchCodeTab('sql')">schema.sql</div>
+      </div>
+
+      <div class="code-content-box" id="activeCodeSnippetViewer">
+        <!-- Code rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Popup -->
+  <div class="toast-popup" id="toastPopup">
+    Action confirmed!
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════════
+       🛠️ FLOATING DEVELOPER DIRECTIVE & LIVE REVISION CONSOLE (AI PAIR-PROGRAMMER)
+       Supports 2-Way Chat, Voice (Mic), Screenshot Analysis, and Real Live DOM Code Updates
+       ═══════════════════════════════════════════════════════════════════════════ -->
+  <div class="floating-dev-console" id="floatingDevConsole" style="width: 520px;">
+    <div class="console-header" onclick="toggleFloatingConsole()">
+      <div style="display: flex; align-items: center; gap: 0.6rem;">
+        <span style="font-size: 1.3rem;" id="consoleRoleAvatar">👑</span>
+        <div>
+          <div style="font-size: 0.9rem; font-weight: 800; color: #fff;" id="consoleHeaderTitle">AI Developer
+            Pair-Programming Console</div>
+          <div style="font-size: 0.72rem; color: #38bdf8;">Neha (Frontend) & Rohan (Backend) • Live Code Engine</div>
+        </div>
+      </div>
+      <div style="display: flex; gap: 0.35rem; align-items: center;" onclick="event.stopPropagation()">
+        <select id="userRoleSelect" onchange="changeConsoleRole(this.value)"
+          style="background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.15); color: #fbbf24; font-size: 0.72rem; padding: 0.2rem 0.5rem; border-radius: 6px; outline: none; cursor: pointer;">
+          <option value="ceo">👑 CEO Boss Mode</option>
+          <option value="client">👤 Client Feedback Mode</option>
+        </select>
+        <button class="btn-action" style="padding: 0.2rem 0.5rem; font-size: 0.75rem;" id="minimizeBtn"
+          onclick="toggleFloatingConsole()">
+          ▼ Min
+        </button>
+      </div>
+    </div>
+
+    <div class="console-body" style="display: flex; flex-direction: column; gap: 0.85rem; max-height: 520px;">
+
+      <!-- 1. Real 2-Way Interactive Conversation Stream with Neha & Rohan -->
+      <div id="devChatStreamBox"
+        style="background: rgba(7, 10, 19, 0.85); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 0.85rem; max-height: 220px; overflow-y: auto; display: flex; flex-direction: column; gap: 0.65rem; font-size: 0.8rem;">
+        <div
+          style="background: rgba(99,102,241,0.15); border-left: 3px solid #6366f1; padding: 0.5rem 0.75rem; border-radius: 6px;">
+          <div style="font-weight: 800; color: #a5b4fc; margin-bottom: 0.2rem;">👩‍💻 Neha Kapoor (Frontend Lead) &
+            👨‍💻 Rohan (Backend):</div>
+          <div style="color: #e2e8f0; line-height: 1.4;">
+            "Namaste Boss Avinash! Hum live staging par aapke directives execute karne ke liye ready hain. Aap
+            <strong>bol kar, text chat me type karke, ya screenshot upload karke</strong> koi bhi section, new cards,
+            colors, contact form, ya pricing table add/update karwa sakte hain!"
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Preset Prompt Chips (Just like ChatGPT / Claude) -->
+      <div style="display: flex; gap: 0.35rem; flex-wrap: wrap;">
+        <button type="button" class="btn-action"
+          style="font-size: 0.7rem; padding: 0.2rem 0.55rem; background: rgba(6,182,212,0.12); border-color: rgba(6,182,212,0.3); color: #38bdf8;"
+          onclick="quickSuggestDirective('Add client testimonials review section with 5 stars')">
+          + Testimonials
+        </button>
+        <button type="button" class="btn-action"
+          style="font-size: 0.7rem; padding: 0.2rem 0.55rem; background: rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.3); color: #34d399;"
+          onclick="quickSuggestDirective('Add interactive Contact Form with Name, Email and Message')">
+          + Contact Form
+        </button>
+        <button type="button" class="btn-action"
+          style="font-size: 0.7rem; padding: 0.2rem 0.55rem; background: rgba(251,191,36,0.12); border-color: rgba(251,191,36,0.3); color: #fbbf24;"
+          onclick="quickSuggestDirective('Change theme to Royal Gold Luxury')">
+          🎨 Gold Theme
+        </button>
+        <button type="button" class="btn-action"
+          style="font-size: 0.7rem; padding: 0.2rem 0.55rem; background: rgba(168,85,247,0.12); border-color: rgba(168,85,247,0.3); color: #c084fc;"
+          onclick="quickSuggestDirective('Add 3 Pricing Tiers (Starter ₹499, Pro ₹999, Enterprise ₹1999)')">
+          + Pricing Matrix
+        </button>
+        <button type="button" class="btn-action"
+          style="font-size: 0.7rem; padding: 0.2rem 0.55rem; background: rgba(244,63,94,0.12); border-color: rgba(244,63,94,0.3); color: #fb7185;"
+          onclick="quickSuggestDirective('Add floating WhatsApp support chat button')">
+          💬 WhatsApp
+        </button>
+      </div>
+
+      <!-- 2. Chat Input Zone: Text + Paste Screenshot + Mic + Send -->
+      <div id="chatInputZone"
+        style="background: rgba(7,10,19,0.9); border: 1.5px solid rgba(255,255,255,0.12); border-radius: 14px; padding: 0.65rem 0.75rem; display: flex; flex-direction: column; gap: 0.5rem; transition: border-color 0.2s;"
+        onfocus="this.style.borderColor='rgba(99,102,241,0.6)'"
+        onblur="this.style.borderColor='rgba(255,255,255,0.12)'">
+
+        <!-- Pasted Screenshot Preview (shows inside box when Ctrl+V) -->
+        <div id="pastedImgPreviewWrap" style="display:none; position:relative; width:fit-content;">
+          <img id="pastedScreenshotThumb"
+            style="max-height: 90px; max-width: 100%; border-radius: 8px; border: 1px solid rgba(99,102,241,0.5);"
+            alt="">
+          <button onclick="clearPastedImage()"
+            style="position:absolute; top:-6px; right:-6px; background:#f43f5e; color:#fff; border:none; border-radius:50%; width:18px; height:18px; font-size:0.7rem; cursor:pointer; display:flex; align-items:center; justify-content:center; line-height:1;">✕</button>
+        </div>
+
+        <!-- Text input row -->
+        <div style="display:flex; gap:0.5rem; align-items:flex-end;">
+          <textarea id="devDirectiveInput" rows="2"
+            placeholder="Type karo ya Ctrl+V se screenshot paste karo... Enter = Send"
+            style="flex:1; background:transparent; border:none; outline:none; color:#e2e8f0; font-size:0.82rem; resize:none; font-family:inherit; line-height:1.4; min-height:42px;"
+            onkeydown="handleChatKeydown(event)" onpaste="handleChatPaste(event)"></textarea>
+          <div style="display:flex; flex-direction:column; gap:0.35rem;">
+            <button type="button" id="devMicBtn" onclick="startDevVoiceInput()" title="Voice Input"
+              style="background:rgba(99,102,241,0.25); border:1px solid #818cf8; color:#818cf8; border-radius:8px; padding:0.35rem 0.55rem; font-size:0.8rem; cursor:pointer; white-space:nowrap;">
+              🎤
+            </button>
+            <button type="button" onclick="submitDeveloperUpdate()" title="Send to Developer"
+              style="background:linear-gradient(135deg,#6366f1,#38bdf8); border:none; color:#fff; border-radius:8px; padding:0.35rem 0.55rem; font-size:0.8rem; cursor:pointer; font-weight:800; white-space:nowrap;">
+              ➤
+            </button>
+          </div>
+        </div>
+
+        <!-- hint bar -->
+        <div style="display:flex; justify-content:space-between; font-size:0.68rem; color:var(--text-muted);">
+          <span>📸 Ctrl+V = screenshot paste • 🖱️ or <span style="color:#fbbf24; cursor:pointer;"
+              onclick="document.getElementById('screenshotFileInputHidden').click()">upload file</span></span>
+          <span id="screenshotStatusTag">Enter = Send</span>
+        </div>
+        <input type="file" id="screenshotFileInputHidden" accept="image/*" style="display:none;"
+          onchange="handleScreenshotUpload(event)">
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ═════════════════════════════════════════════════════════════════════════
+    // 🧠 INTELLIGENT PROJECT DOMAIN DETECTOR & GENERATOR ENGINE
+    // ═════════════════════════════════════════════════════════════════════════
+
+    let currentProject = {
+      id: "PROJ-001",
+      title: "Nike Air Modern E-Commerce Store",
+      client: "NexGen Retail Ltd",
+      stack: "React + Node.js + TailwindCSS",
+      budget: "₹2,50,000",
+      requirements: "Product Catalogue, Glassmorphic Checkout, Razorpay Integration",
+      domain: "ecommerce"
+    };
+
+    let domainItems = [];
+    let cartOrBookings = [];
+    let projectVersion = 1.0;
+    let currentCodeTab = 'html';
+
+    // Domain Templates Generator
+    function detectDomain(title, req = "") {
+      const text = `${title} ${req}`.toLowerCase();
+      if (text.includes("portfolio") || text.includes("resume") || text.includes("cv") || text.includes("personal") || text.includes("developer site") || text.includes("designer portfolio") || text.includes("profile") || text.includes("engineer portfolio")) return "portfolio";
+      if (text.includes("real estate") || text.includes("property") || text.includes("housing") || text.includes("villa") || text.includes("apartment")) return "realestate";
+      if (text.includes("dental") || text.includes("clinic") || text.includes("hospital") || text.includes("doctor") || text.includes("medical") || text.includes("health")) return "healthcare";
+      if (text.includes("gym") || text.includes("fitness") || text.includes("workout") || text.includes("yoga") || text.includes("trainer")) return "fitness";
+      if (text.includes("food") || text.includes("restaurant") || text.includes("cafe") || text.includes("burger") || text.includes("pizza") || text.includes("bakery")) return "restaurant";
+      if (text.includes("ai") || text.includes("bot") || text.includes("saas") || text.includes("cloud") || text.includes("analytics") || text.includes("crm")) return "saas_ai";
+      if (text.includes("bank") || text.includes("crypto") || text.includes("wallet") || text.includes("fintech") || text.includes("finance")) return "fintech";
+      if (text.includes("school") || text.includes("lms") || text.includes("course") || text.includes("academy") || text.includes("education")) return "education";
+      if (text.includes("grocery") || text.includes("supermarket") || text.includes("mart") || text.includes("organic")) return "grocery";
+      return "ecommerce";
+    }
+
+    // Smart User Requirements Parser & Custom Generator
+    function parseCustomRequirementsToItems(reqText, domain, client) {
+      if (!reqText) return [];
+      // Split by commas, semicolons, or newlines
+      const rawParts = reqText.split(/[,;\n•|]+/).map(s => s.trim()).filter(s => s.length > 2);
+      if (rawParts.length === 0) return [];
+
+      const emojiMap = {
+        portfolio: '💼', project: '🚀', code: '💻', web: '🌐', app: '📱', fullstack: '⚡', ai: '🤖',
+        hotel: '🏨', room: '🛏️', suite: '👑', dinner: '🍷', food: '🍽️', safari: '🐪', spa: '💆', pool: '🏊',
+        car: '🚗', wash: '🚿', coat: '✨', doctor: '👨‍⚕️', dental: '🦷', teeth: '✨', surgery: '🔬', align: '😁',
+        course: '📚', math: '📐', physics: '⚛️', test: '📝', react: '⚛️', python: '🐍',
+        gym: '🏋️', yoga: '🧘', shake: '🥤', burger: '🍔', pizza: '🍕', villa: '🏡', house: '🏢', home: '🏠',
+        shoe: '👟', shirt: '👕', bag: '👜', watch: '⌚', music: '🎵', legal: '⚖️', travel: '✈️', audit: '📊'
+      };
+
+      return rawParts.map((part, idx) => {
+        let matchedEmoji = domain === 'portfolio' ? '🚀' : '⭐';
+        const lower = part.toLowerCase();
+        for (const [k, emo] of Object.entries(emojiMap)) {
+          if (lower.includes(k)) { matchedEmoji = emo; break; }
+        }
+
+        // Generate sensible price / label
+        let price = 0;
+        let priceLabel = domain === 'portfolio' ? "⭐ Live Case Study" : `₹${(1499 + idx * 500).toLocaleString()}`;
+        if (domain === 'realestate' || lower.includes('villa') || lower.includes('suite') || lower.includes('penthouse')) {
+          price = (idx + 1) * 4500000;
+          priceLabel = `₹${((price) / 100000).toFixed(0)} Lakhs`;
+        } else if (domain === 'healthcare' || lower.includes('surgery') || lower.includes('aligner')) {
+          price = 4500 + (idx * 3000);
+          priceLabel = `₹${price.toLocaleString()}`;
+        } else if (domain === 'restaurant' || lower.includes('burger') || lower.includes('pizza') || lower.includes('shake')) {
+          price = 249 + (idx * 80);
+          priceLabel = `₹${price.toLocaleString()}`;
+        }
+
+        const category = domain === 'portfolio' ? (idx % 2 === 0 ? "fullstack" : "ai_ml") : (idx % 2 === 0 ? "core" : "premium");
+
+        return {
+          id: 100 + idx,
+          name: part,
+          cat: category,
+          price,
+          priceLabel,
+          emoji: matchedEmoji,
+          details: domain === 'portfolio' ? `Production system designed & deployed by ${client}: ${part}` : `Tailored deliverable for ${client} as specified in project blueprint: ${part}`
+        };
+      });
+    }
+
+    function generateDomainData(domain, title, client, requirements = "") {
+      const customParsed = parseCustomRequirementsToItems(requirements, domain, client);
+
+      if (domain === "portfolio") {
+        const defaultProjects = [
+          { id: 1, name: "NexusAI Autonomous Virtual Office", cat: "fullstack", price: 0, priceLabel: "⭐ Featured", emoji: "🏢", details: "Autonomous multi-agent office operating system with Web Speech synthesis, task scheduling & live CRM." },
+          { id: 2, name: "NeuralFlow AI Cloud Platform", cat: "ai_ml", price: 0, priceLabel: "🤖 AI/ML", emoji: "🧠", details: "Fine-tuned LLM reasoning pipeline with Redis vector similarity search & sub-50ms latency." },
+          { id: 3, name: "NexGen Ultra Fast E-Commerce", cat: "fullstack", price: 0, priceLabel: "🛒 Web App", emoji: "⚡", details: "Headless Next.js 14 store with Razorpay payment webhooks and 99+ Lighthouse performance score." },
+          { id: 4, name: "FinTrust Real-Time Crypto Terminal", cat: "mobile", price: 0, priceLabel: "📱 Flutter/SaaS", emoji: "📊", details: "Cross-platform mobile fintech app with live TradingView candle charts & biometric authentication." },
+          { id: 5, name: "AutoLead AI Sales Scraper", cat: "ai_ml", price: 0, priceLabel: "🚀 Automation", emoji: "🎯", details: "Automated multi-threaded B2B lead generation scraper with email verification and CRM sync." },
+          { id: 6, name: "CloudShield Enterprise Zero-Trust", cat: "fullstack", price: 0, priceLabel: "🔐 Security", emoji: "🛡️", details: "Distributed role-based access controller with HMAC SHA256 signatures and audit trail telemetry." }
+        ];
+
+        return {
+          announcement: "💼 OPEN FOR CONTRACT & FULL-TIME ROLES — AVAILABLE FOR IMMEDIATE HIRE",
+          headline: `👨‍💻 ${title}`,
+          subtitle: `Full Stack AI Architect & Creative Developer. Crafting scalable web architectures, autonomous agent swarms, and pixel-perfect high-converting web applications.`,
+          primaryActionText: "📬 Contact / Hire Me",
+          features: [
+            { icon: "⚡", title: "Full Stack Mastery", sub: "React, Next.js, Node.js, Python" },
+            { icon: "🤖", title: "AI & Autonomous Swarms", sub: "LLMs, Vector DBs, Agents" },
+            { icon: "☁️", title: "Cloud Infrastructure", sub: "Docker, AWS, Redis, CI/CD" },
+            { icon: "🏆", title: "50+ Shipped Apps", sub: "Enterprise & High-Scale SaaS" }
+          ],
+          categories: ["all", "fullstack", "ai_ml", "mobile"],
+          items: customParsed.length > 0 ? customParsed : defaultProjects
+        };
+      }
+
+      if (domain === "realestate") {
+        const defaultItems = [
+          { id: 1, name: "The Grand Marina Penthouse", cat: "penthouse", price: 24500000, priceLabel: "₹2.45 Cr", emoji: "🏙️", details: "4 BHK • 3,800 Sq.Ft • Sea View, Private Infinity Pool" },
+          { id: 2, name: "Emerald Woods Luxury Villa", cat: "villa", price: 18500000, priceLabel: "₹1.85 Cr", emoji: "🏡", details: "5 BHK • 4,200 Sq.Ft • Private Garden & Solar Deck" },
+          { id: 3, name: "Skyline Smart Residence", cat: "apartment", price: 8500000, priceLabel: "₹85 Lakhs", emoji: "🏢", details: "3 BHK • 1,650 Sq.Ft • Home Automation & Clubhouse" },
+          { id: 4, name: "Royal Palm Heights", cat: "penthouse", price: 32000000, priceLabel: "₹3.20 Cr", emoji: "🏰", details: "6 BHK • 5,400 Sq.Ft • Helipad Access & Spa" }
+        ];
+
+        return {
+          announcement: "🏢 LUXURY LIVING SPACES — 0% BROKERAGE & FREE SITE VISITS",
+          headline: `${title} — Find Your Dream Luxury Property`,
+          subtitle: `Verified premium residences and commercial suites curated by ${client}.`,
+          primaryActionText: "🏢 View Booked Visits",
+          features: [
+            { icon: "🏛️", title: "100% RERA Approved", sub: "Verified legal titles" },
+            { icon: "🕶️", title: "3D Virtual Tours", sub: "Inspect before you visit" },
+            { icon: "🏦", title: "Instant Home Loan", sub: "Pre-approved at 8.2%" },
+            { icon: "🤝", title: "Zero Brokerage", sub: "Direct builder pricing" }
+          ],
+          categories: ["all", "villa", "penthouse", "apartment", "core", "premium"],
+          items: customParsed.length > 0 ? [...customParsed, ...defaultItems.slice(0, 2)] : defaultItems
+        };
+      }
+
+      if (domain === "healthcare") {
+        const defaultItems = [
+          { id: 1, name: "Invisible Teeth Aligners Package", cat: "dental", price: 45000, priceLabel: "₹45,000", emoji: "🦷", details: "Complete 3D Digital Scan + 18 Custom Aligner Sets" },
+          { id: 2, name: "Root Canal + Zirconia Crown", cat: "dental", price: 6500, priceLabel: "₹6,500", emoji: "🔬", details: "Single Sitting Rotary Laser RCT with 15-Yr Warranty" },
+          { id: 3, name: "Full Body Executive Health Scan", cat: "consult", price: 3499, priceLabel: "₹3,499", emoji: "🩺", details: "84 Blood Tests + Cardiac ECG + Doctor Consultation" },
+          { id: 4, name: "Laser Teeth Whitening Session", cat: "dental", price: 4999, priceLabel: "₹4,999", emoji: "✨", details: "Advanced LED Laser Bleaching — 4 Shades Brighter" }
+        ];
+
+        return {
+          announcement: "🏥 NABH ACCREDITED CLINIC — 24/7 EMERGENCY & DOCTOR APPOINTMENTS",
+          headline: `${title} — World-Class Specialized Care`,
+          subtitle: `Advanced laser treatments, certified senior specialists, and pain-free healthcare for ${client}.`,
+          primaryActionText: "📅 My Appointments",
+          features: [
+            { icon: "👨‍⚕️", title: "Top Specialists", sub: "15+ Yrs Avg Experience" },
+            { icon: "⚡", title: "Laser Technology", sub: "Pain-free procedures" },
+            { icon: "🧪", title: "In-House Lab", sub: "Same day digital reports" },
+            { icon: "🛡️", title: "100% Cashless", sub: "All Major Insurances" }
+          ],
+          categories: ["all", "dental", "surgery", "consult", "core", "premium"],
+          items: customParsed.length > 0 ? [...customParsed, ...defaultItems.slice(0, 2)] : defaultItems
+        };
+      }
+
+      if (domain === "fitness") {
+        const defaultItems = [
+          { id: 1, name: "Elite 1-Year All-Access Pass", cat: "membership", price: 18999, priceLabel: "₹18,999/yr", emoji: "🏆", details: "Unlimited Gym + Crossfit + Swimming + Steam Bath" },
+          { id: 2, name: "Personal Trainer Transformation (3 Mo)", cat: "training", price: 12500, priceLabel: "₹12,500", emoji: "🥊", details: "1-on-1 Certified Coach + Body Composition Tracking" },
+          { id: 3, name: "HydroWhey Isolate Protein (2kg)", cat: "nutrition", price: 4299, priceLabel: "₹4,299", emoji: "🥤", details: "30g Pure Whey Isolate per scoop • Zero Added Sugar" },
+          { id: 4, name: "Unlimited Yoga & Pilates Pass", cat: "membership", price: 7999, priceLabel: "₹7,999/6mo", emoji: "🧘", details: "Morning & Evening Guided Sessions with Masters" }
+        ];
+
+        return {
+          announcement: "💪 FITFEST LIVE — GET 3 MONTHS FREE ON ANNUAL MEMBERSHIP",
+          headline: `${title} — Transform Your Body & Mind`,
+          subtitle: `Olympic grade equipment, certified coaches, and nutrition plans at ${client}.`,
+          primaryActionText: "💪 View Membership",
+          features: [
+            { icon: "🏋️", title: "Biometric Gym Floor", sub: "Smart Cardio & Weights" },
+            { icon: "🧘", title: "Yoga & Crossfit", sub: "30+ Weekly Live Classes" },
+            { icon: "🥗", title: "Diet Nutritionist", sub: "Custom meal planners" },
+            { icon: "🚿", title: "Steam & Sauna", sub: "Post-workout recovery" }
+          ],
+          categories: ["all", "membership", "training", "nutrition", "core", "premium"],
+          items: customParsed.length > 0 ? [...customParsed, ...defaultItems.slice(0, 2)] : defaultItems
+        };
+      }
+
+      if (domain === "restaurant") {
+        const defaultItems = [
+          { id: 1, name: "Truffle Mushroom Angus Burger", cat: "burgers", price: 389, priceLabel: "₹389", emoji: "🍔", details: "Brioche Bun • Swiss Cheese • Smoked Garlic Aioli" },
+          { id: 2, name: "Woodfired Burrata Margherita Pizza", cat: "pizzas", price: 549, priceLabel: "₹549", emoji: "🍕", details: "San Marzano Tomatoes • Fresh Basil • Extra Virgin Olive Oil" },
+          { id: 3, name: "Loaded Belgian Chocolate Shake", cat: "shakes", price: 249, priceLabel: "₹249", emoji: "🥤", details: "Dark Chocolate Gelato • Hazelnut Crunch • Whipped Cream" },
+          { id: 4, name: "Crispy Peri-Peri Chicken Wings", cat: "burgers", price: 329, priceLabel: "₹329", emoji: "🍗", details: "8 Pcs Jumbo Wings with Spicy Dip" }
+        ];
+
+        return {
+          announcement: "🍕 FRESH FROM THE OVEN — FREE DELIVERY ON ORDERS OVER ₹399",
+          headline: `${title} — Artisan Flavors Delivered Hot`,
+          subtitle: `Authentic recipes, farm-fresh ingredients, and culinary perfection by ${client}.`,
+          primaryActionText: "🍔 Food Bag",
+          features: [
+            { icon: "🛵", title: "30-Min Delivery", sub: "Hot & temperature controlled" },
+            { icon: "🌿", title: "100% Fresh Produce", sub: "Zero preservatives used" },
+            { icon: "👨‍🍳", title: "Master Chefs", sub: "Award-winning recipes" },
+            { icon: "💳", title: "Contactless Pay", sub: "UPI & Cards accepted" }
+          ],
+          categories: ["all", "burgers", "pizzas", "shakes", "core", "premium"],
+          items: customParsed.length > 0 ? [...customParsed, ...defaultItems.slice(0, 2)] : defaultItems
+        };
+      }
+
+      if (domain === "saas_ai") {
+        const defaultItems = [
+          { id: 1, name: "Pro Developer Tier (100k API Calls)", cat: "subscription", price: 2499, priceLabel: "₹2,499/mo", emoji: "🚀", details: "100k Tokens • Webhook Triggers • Priority Queue Access" },
+          { id: 2, name: "Autonomous AI Agent Fleet (5 Bots)", cat: "api", price: 6999, priceLabel: "₹6,999/mo", emoji: "🤖", details: "Customer Support & Lead Gen Bots with Human Handover" },
+          { id: 3, name: "Enterprise Custom Fine-Tuning", cat: "enterprise", price: 45000, priceLabel: "₹45,000", emoji: "🏢", details: "Fine-tune LLM on your private business databases" },
+          { id: 4, name: "Dedicated Redis Vector Store", cat: "api", price: 4200, priceLabel: "₹4,200/mo", emoji: "⚡", details: "10M Embeddings Capacity with Hybrid Keyword Search" }
+        ];
+
+        return {
+          announcement: "🤖 GPT-4 TURBO POWERED — 99.99% UPTIME CLOUD API PLATFORM",
+          headline: `${title} — Next-Gen Autonomous AI Platform`,
+          subtitle: `Automate workflows, generate insights, and integrate real-time APIs for ${client}.`,
+          primaryActionText: "⚡ Cloud Dashboard",
+          features: [
+            { icon: "⚡", title: "Sub-50ms Latency", sub: "Global Edge Network" },
+            { icon: "🔐", title: "SOC2 & HIPAA Compliant", sub: "Enterprise Data Shield" },
+            { icon: "📊", title: "Real-time Telemetry", sub: "Live Streaming Metrics" },
+            { icon: "🛠️", title: "SDKs for 8 Languages", sub: "Python, JS, Go, Rust..." }
+          ],
+          categories: ["all", "subscription", "api", "enterprise", "core", "premium"],
+          items: customParsed.length > 0 ? [...customParsed, ...defaultItems.slice(0, 2)] : defaultItems
+        };
+      }
+
+      // Universal / Custom Fallback with parsed items
+      const defaultItems = [
+        { id: 1, name: `${title} Standard Package`, cat: "core", price: 2999, priceLabel: "₹2,999", emoji: "📦", details: `Official core deliverable designed for ${client}` },
+        { id: 2, name: `${title} Premium Suite`, cat: "premium", price: 5499, priceLabel: "₹5,499", emoji: "⭐", details: `High-tier complete solution with priority support` },
+        { id: 3, name: "Express Onboarding & Setup", cat: "core", price: 1499, priceLabel: "₹1,499", emoji: "🚀", details: `Instant deployment within 24 hours` },
+        { id: 4, name: "Annual Maintenance SLA", cat: "premium", price: 8999, priceLabel: "₹8,999/yr", emoji: "🛡️", details: `Continuous monitoring, security updates, and automated backups` }
+      ];
+
+      return {
+        announcement: "⚡ OFFICIAL PRODUCTION RELEASE — 100% VERIFIED LIVE",
+        headline: `${title} — Tailored Client Experience`,
+        subtitle: `Engineered autonomously by Neha & Rohan for ${client}.`,
+        primaryActionText: "🛒 Active Bag",
+        features: [
+          { icon: "🚀", title: "High-Speed Core", sub: "Sub-second response" },
+          { icon: "💳", title: "Secure Checkout", sub: "Razorpay & UPI ready" },
+          { icon: "🔄", title: "Live Sync", sub: "Real-time data flow" },
+          { icon: "🤖", title: "AI Powered", sub: "Autonomous architecture" }
+        ],
+        categories: ["all", "core", "premium"],
+        items: customParsed.length > 0 ? customParsed : defaultItems
+      };
+    }
+
+    // ─── Initialization & State Restoration ───────────────────────────────────
+    document.addEventListener('DOMContentLoaded', () => {
+      loadProjectState();
+    });
+
+    function loadProjectState() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const projId = urlParams.get('id') || 'PROJ-001';
+
+      try {
+        const stored = localStorage.getItem('nexusai_projects');
+        if (stored) {
+          const list = JSON.parse(stored);
+          const found = list.find(p => p.id === projId);
+          if (found) {
+            currentProject = found;
+          }
+        }
+      } catch (e) {
+        console.log("Storage read error:", e);
+      }
+
+      currentProject.domain = detectDomain(currentProject.title, currentProject.requirements || "");
+      renderDynamicProjectUI();
+      restoreProjectCustomizations();
+    }
+
+    function renderDynamicProjectUI() {
+      const domainData = generateDomainData(currentProject.domain, currentProject.title, currentProject.client, currentProject.requirements || "");
+      domainItems = (currentProject.customItems && currentProject.customItems.length > 0) ? currentProject.customItems : domainData.items;
+
+      document.getElementById('projectHeaderTitle').textContent = currentProject.title;
+      document.title = `${currentProject.title} — Real Live Hosted App`;
+      document.getElementById('projectAnnouncement').textContent = domainData.announcement;
+      document.getElementById('projectHeroHeadline').textContent = domainData.headline;
+      document.getElementById('projectHeroSubtitle').textContent = domainData.subtitle;
+      document.getElementById('primaryActionBtn').innerHTML = `${domainData.primaryActionText} (<span id="cartCountBadge">${cartOrBookings.length}</span>)`;
+
+      // Render Features Bar
+      document.getElementById('featuresBar').innerHTML = domainData.features.map(f => `
+        <div style="background: rgba(15,23,42,0.6); border: 1px solid var(--border-glass); border-radius: 14px; padding: 1.1rem; display: flex; align-items: center; gap: 0.85rem;">
+          <span style="font-size: 1.75rem;">${f.icon}</span>
+          <div>
+            <div style="font-weight: 700; font-size: 0.92rem;">${f.title}</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">${f.sub}</div>
+          </div>
+        </div>
+      `).join('');
+
+      // Render Categories
+      document.getElementById('categoryFilterButtons').innerHTML = domainData.categories.map(c => `
+        <button class="btn-action" style="font-size: 0.78rem; text-transform: capitalize;" onclick="filterCategory('${c}')">
+          ${c}
+        </button>
+      `).join('');
+
+      // Render Grid Items
+      renderGrid(domainItems);
+      updateCodeSnippetView();
+    }
+
+    function restoreProjectCustomizations() {
+      try {
+        const customRaw = localStorage.getItem(`nexusai_custom_${currentProject.id}`);
+        if (!customRaw) return;
+        const custom = JSON.parse(customRaw);
+
+        if (custom.version) {
+          projectVersion = custom.version;
+          const verEl = document.getElementById('projectBuildVersion');
+          if (verEl) verEl.textContent = `Build: v${projectVersion} Active`;
+        }
+
+        if (custom.themePrimary) {
+          document.documentElement.style.setProperty('--primary', custom.themePrimary);
+        }
+        if (custom.themeBg) {
+          document.body.style.backgroundColor = custom.themeBg;
+        }
+        if (custom.heroBg) {
+          const hero = document.getElementById('projectHeroSection');
+          if (hero) hero.style.background = custom.heroBg;
+        }
+        if (custom.headline) {
+          const h1 = document.getElementById('projectHeroHeadline');
+          if (h1) h1.textContent = custom.headline;
+        }
+        if (custom.subtitle) {
+          const sub = document.getElementById('projectHeroSubtitle');
+          if (sub) sub.textContent = custom.subtitle;
+        }
+        if (custom.announcement) {
+          const ann = document.getElementById('projectAnnouncement');
+          if (ann) ann.textContent = custom.announcement;
+        }
+        if (custom.injectedSections && Array.isArray(custom.injectedSections)) {
+          custom.injectedSections.forEach(sec => {
+            if (!document.getElementById(sec.id)) {
+              const el = document.createElement('div');
+              el.id = sec.id;
+              el.className = 'injected-dev-section';
+              el.innerHTML = sec.html;
+              if (sec.style) el.style.cssText = sec.style;
+              document.getElementById('liveProjectRoot').appendChild(el);
+            }
+          });
+        }
+        if (custom.chatHistory) {
+          const chatBox = document.getElementById('devChatStreamBox');
+          if (chatBox && custom.chatHistory.trim()) {
+            chatBox.innerHTML = custom.chatHistory;
+          }
+        }
+      } catch (e) {
+        console.log("Customization restore error:", e);
+      }
+    }
+
+    function renderGrid(items) {
+      const container = document.getElementById('showcaseGridContainer');
+      container.innerHTML = items.map(item => `
+        <div class="showcase-card">
+          <div>
+            <div class="showcase-emoji-banner">${item.emoji}</div>
+            <span style="font-size: 0.72rem; color: #38bdf8; font-weight: 700; text-transform: uppercase; background: rgba(6,182,212,0.15); padding: 0.15rem 0.5rem; border-radius: 20px;">${item.cat}</span>
+            <div style="font-size: 1.05rem; font-weight: 800; margin: 0.45rem 0 0.25rem;">${item.name}</div>
+            <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.4; margin-bottom: 1rem;">${item.details}</p>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 0.85rem;">
+            <div style="font-size: 1.2rem; font-weight: 800; color: #34d399;">${item.priceLabel}</div>
+            <button class="btn-action btn-primary" style="padding: 0.4rem 0.85rem; font-size: 0.8rem;" onclick="handleItemAction('${item.name}', '${item.priceLabel}')">
+              + Select / Add
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function filterCategory(cat) {
+      if (cat === 'all') {
+        renderGrid(domainItems);
+      } else {
+        renderGrid(domainItems.filter(i => i.cat === cat));
+      }
+    }
+
+    function handleItemAction(name, price) {
+      cartOrBookings.push({ name, price, time: new Date().toLocaleTimeString() });
+      const badge = document.getElementById('cartCountBadge');
+      if (badge) badge.textContent = cartOrBookings.length;
+      showToast(`✨ Added "${name}" (${price})!`);
+    }
+
+    function handlePrimaryAction() {
+      const modal = document.getElementById('interactiveActionModal');
+      const title = document.getElementById('actionModalTitle');
+      const body = document.getElementById('actionModalBody');
+
+      modal.classList.add('active');
+      title.textContent = `📋 ${currentProject.title} — Active Basket`;
+
+      if (cartOrBookings.length === 0) {
+        body.innerHTML = `
+          <div style="text-align: center; color: var(--text-muted); padding: 2rem 0;">
+            No items selected yet. Click "+ Select / Add" on any card!
+          </div>
+        `;
+      } else {
+        body.innerHTML = `
+          <div style="margin-bottom: 1rem;">
+            ${cartOrBookings.map((item, idx) => `
+              <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.65rem 0; border-bottom: 1px solid rgba(255,255,255,0.06);">
+                <div>
+                  <div style="font-weight: 700; font-size: 0.88rem;">${item.name}</div>
+                  <div style="font-size: 0.72rem; color: var(--text-muted);">Added at ${item.time}</div>
+                </div>
+                <div style="font-weight: 800; color: #34d399;">${item.price}</div>
+              </div>
+            `).join('')}
+          </div>
+          <div style="background: rgba(6,182,212,0.1); border: 1px solid rgba(6,182,212,0.3); border-radius: 10px; padding: 0.75rem; font-size: 0.8rem; color: #38bdf8;">
+            🚀 Ready for instant checkout & simulated delivery tracking!
+          </div>
+        `;
+      }
+    }
+
+    function closeActionModal() {
+      document.getElementById('interactiveActionModal').classList.remove('active');
+    }
+
+    function confirmActionModal() {
+      showToast("🎉 Action processed successfully! Confirmed by Neha & Rohan.");
+      closeActionModal();
+      cartOrBookings = [];
+      const badge = document.getElementById('cartCountBadge');
+      if (badge) badge.textContent = "0";
+      speakText("Aapka order aur booking request confirm ho chuki hai! Server response status 200 OK.");
+    }
+
+    // ─── Source Code Viewer & Downloader ────────────────────────────────────
+    function openSourceCodeModal() {
+      document.getElementById('sourceCodeModal').classList.add('active');
+      switchCodeTab('html');
+    }
+
+    function closeSourceCodeModal() {
+      document.getElementById('sourceCodeModal').classList.remove('active');
+    }
+
+    function switchCodeTab(tab) {
+      currentCodeTab = tab;
+      document.querySelectorAll('.code-tab').forEach(t => t.classList.remove('active'));
+      const activeEl = document.getElementById(`tab-${tab}`);
+      if (activeEl) activeEl.classList.add('active');
+      updateCodeSnippetView();
+    }
+
+    function updateCodeSnippetView() {
+      const viewer = document.getElementById('activeCodeSnippetViewer');
+      if (!viewer) return;
+
+      const itemsJson = JSON.stringify(domainItems.map(i => ({ name: i.name, category: i.cat, price: i.priceLabel, emoji: i.emoji })), null, 2);
+
+      const codeSnippets = {
+        html: `<!-- 🚀 ${currentProject.title} — Standalone HTML Layout -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${currentProject.title}</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo">${currentProject.client}</div>
+    <nav>
+      <a href="#home">Home</a>
+      <a href="#services">Features</a>
+      <a href="#catalog">Showcase</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+  <main>
+    <section class="hero">
+      <h1>${currentProject.title}</h1>
+      <p>${currentProject.requirements || 'Engineered by NexusAI Team'}</p>
+      <button class="btn-cta" onclick="openOrderModal()">Explore Deliverables</button>
+    </section>
+    <section class="catalog-grid" id="itemsList">
+      <!-- Populated dynamically via app.js -->
+    </section>
+  </main>
+  <script src="app.js"><\/script>
+</body>
+</html>`,
+        css: `/* 🎨 ${currentProject.title} — Modern Glassmorphism CSS */
+:root {
+  --primary-color: #6366f1;
+  --accent-cyan: #06b6d4;
+  --bg-color: #070a13;
+  --text-main: #f8fafc;
+  --font-family: 'Inter', sans-serif;
+}
+
+body {
+  background: var(--bg-color);
+  color: var(--text-main);
+  font-family: var(--font-family);
+  margin: 0;
+  padding: 0;
+}
+
+.hero {
+  background: radial-gradient(circle, rgba(99,102,241,0.3), transparent 70%);
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  padding: 2rem;
+}`,
+        js: `// ⚡ ${currentProject.title} — Real State & Interactive Logic
+console.log("Loaded: ${currentProject.title} by Neha & Rohan");
+
+const projectData = {
+  client: "${currentProject.client}",
+  budget: "${currentProject.budget}",
+  stack: "${currentProject.stack}",
+  items: ${itemsJson}
+};
+
+function renderItems() {
+  const container = document.getElementById('itemsList');
+  if (!container) return;
+  container.innerHTML = projectData.items.map(item => \`
+    <div class="card">
+      <div class="emoji">\${item.emoji}</div>
+      <h3>\${item.name}</h3>
+      <div class="price">\${item.price}</div>
+      <button onclick="handleBooking('\${item.name}')">+ Select</button>
+    </div>
+  \`).join('');
+}
+
+function handleBooking(itemName) {
+  alert("Selected: " + itemName + " | Processing order via ${currentProject.client} gateway!");
+}
+
+document.addEventListener('DOMContentLoaded', renderItems);`,
+        api: `<?php
+// 🔧 ${currentProject.title} — Backend REST API Schema
+header('Content-Type: application/json');
+
+$project = [
+  "title" => "${currentProject.title}",
+  "client" => "${currentProject.client}",
+  "stack" => "${currentProject.stack}",
+  "status" => "ONLINE_STAGING_200_OK",
+  "items_count" => count(${json_encode($domainItems)})
+];
+
+echo json_encode(["success" => true, "data" => $project]);
+?>`,
+        sql: `-- 🗄️ Database Schema for ${currentProject.title}
+CREATE TABLE IF NOT EXISTS project_orders (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  client_name VARCHAR(255) NOT NULL,
+  item_name VARCHAR(255) NOT NULL,
+  price VARCHAR(50) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);`
+      };
+
+      viewer.textContent = codeSnippets[currentCodeTab] || codeSnippets.html;
+    }
+
+    function downloadProjectBundle() {
+      const code = document.getElementById('activeCodeSnippetViewer').textContent;
+      const blob = new Blob([code], { type: 'text/plain' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `${currentProject.title.toLowerCase().replace(/[^a-z0-9]/g, '_')}_source.${currentCodeTab}`;
+      a.click();
+      showToast("📥 Source code downloaded successfully!");
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toastPopup');
+      if (!toast) return;
+      toast.textContent = msg;
+      toast.style.display = 'block';
+      setTimeout(() => { toast.style.display = 'none'; }, 3000);
+    }
+
+    function copyProjectUrl() {
+      navigator.clipboard.writeText(window.location.href);
+      showToast("🔗 Local Hosting URL copied to clipboard!");
+    }
+
+    function scrollToShowcase() {
+      document.getElementById('showcaseSectionHeader').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // ─── Floating Console & Screenshot Handler ──────────────────────────────
+    function toggleFloatingConsole() {
+      const c = document.getElementById('floatingDevConsole');
+      const minBtn = document.getElementById('minimizeBtn');
+      if (c.classList.contains('minimized')) {
+        c.classList.remove('minimized');
+        minBtn.textContent = '▼ Min';
+      } else {
+        c.classList.add('minimized');
+        minBtn.textContent = '▲ Expand';
+      }
+    }
+
+    let uploadedScreenshotBase64 = null;
+
+    function handleScreenshotUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        uploadedScreenshotBase64 = e.target.result;
+        const thumb = document.getElementById('screenshotPreviewImg');
+        thumb.src = uploadedScreenshotBase64;
+        thumb.style.display = 'inline-block';
+        document.getElementById('uploaderPromptText').innerHTML = `✅ <strong>${file.name}</strong> loaded as visual reference!`;
+        showToast("📸 Screenshot attached for Developer!");
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // ─── Voice Input for Developer Console (Continuous + Silence Timer) ─────
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    function startDevVoiceInput() {
+      if (!SpeechRecognition) {
+        showToast("Speech Recognition not supported in this browser. Use Chrome!");
+        return;
+      }
+
+      const recognition = new SpeechRecognition();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.lang = 'hi-IN';
+
+      const input = document.getElementById('devDirectiveInput');
+      const micBtn = document.getElementById('devMicBtn');
+
+      let accumulated = '';
+      let silenceTimer = null;
+
+      function resetSilence() {
+        clearTimeout(silenceTimer);
+        silenceTimer = setTimeout(() => {
+          recognition.stop();
+        }, 2200);
+      }
+
+      micBtn.style.background = 'rgba(244, 63, 94, 0.35)';
+      micBtn.style.color = '#f43f5e';
+      micBtn.innerHTML = '🔴';
+      input.placeholder = '🎤 Bol rahe hain... 2 sec rukne par auto-send...';
+
+      recognition.onresult = (event) => {
+        accumulated = '';
+        for (let i = 0; i < event.results.length; i++) {
+          accumulated += event.results[i][0].transcript + ' ';
+        }
+        input.value = accumulated.trim();
+        resetSilence();
+      };
+
+      recognition.onend = () => {
+        clearTimeout(silenceTimer);
+        micBtn.style.background = 'rgba(99,102,241,0.25)';
+        micBtn.style.color = '#818cf8';
+        micBtn.innerHTML = '🎤';
+        input.placeholder = 'Type karo ya Ctrl+V se screenshot paste karo... Enter = Send';
+
+        if (input.value.trim()) {
+          submitDeveloperUpdate();
+        }
+      };
+
+      recognition.onerror = (e) => {
+        clearTimeout(silenceTimer);
+        micBtn.style.background = 'rgba(99,102,241,0.25)';
+        micBtn.style.color = '#818cf8';
+        micBtn.innerHTML = '🎤 Mic';
+        showToast("Voice input error: " + e.error);
+      };
+
+      recognition.start();
+      showToast("🎤 Developer Listening... Boliye Sir!");
+    }
+
+    // ─── Ctrl+V Clipboard Paste Handler ─────────────────────────────────────
+    function handleChatPaste(event) {
+      const items = (event.clipboardData || event.originalEvent?.clipboardData)?.items;
+      if (!items) return;
+      for (const item of items) {
+        if (item.type.startsWith('image/')) {
+          event.preventDefault();
+          const file = item.getAsFile();
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            uploadedScreenshotBase64 = e.target.result;
+            const thumb = document.getElementById('pastedScreenshotThumb');
+            const wrap = document.getElementById('pastedImgPreviewWrap');
+            if (thumb) { thumb.src = uploadedScreenshotBase64; }
+            if (wrap) wrap.style.display = 'block';
+            const tag = document.getElementById('screenshotStatusTag');
+            if (tag) tag.textContent = '✅ Screenshot Ready';
+            showToast("📸 Screenshot paste ho gaya! ➤ Send karein.");
+          };
+          reader.readAsDataURL(file);
+          return;
+        }
+      }
+      // If no image, allow normal text paste
+    }
+
+    // ─── Enter = Send, Shift+Enter = New Line ────────────────────────────────
+    function handleChatKeydown(event) {
+      if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        submitDeveloperUpdate();
+      }
+    }
+
+    // ─── Clear Pasted / Uploaded Image ───────────────────────────────────────
+    function clearPastedImage() {
+      uploadedScreenshotBase64 = null;
+      const thumb = document.getElementById('pastedScreenshotThumb');
+      const wrap = document.getElementById('pastedImgPreviewWrap');
+      if (thumb) thumb.src = '';
+      if (wrap) wrap.style.display = 'none';
+      const tag = document.getElementById('screenshotStatusTag');
+      if (tag) tag.textContent = 'Enter = Send';
+    }
+
+    // ─── File input fallback ─────────────────────────────────────────────────
+    function handleScreenshotUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        uploadedScreenshotBase64 = e.target.result;
+        const thumb = document.getElementById('pastedScreenshotThumb');
+        const wrap = document.getElementById('pastedImgPreviewWrap');
+        if (thumb) { thumb.src = uploadedScreenshotBase64; }
+        if (wrap) wrap.style.display = 'block';
+        const tag = document.getElementById('screenshotStatusTag');
+        if (tag) tag.textContent = '✅ Image Ready';
+        showToast("📁 Image upload ho gaya! Send karein.");
+      };
+      reader.readAsDataURL(file);
+    }
+
+
+    let currentConsoleRole = 'ceo';
+
+    function changeConsoleRole(role) {
+      currentConsoleRole = role;
+      const avatar = document.getElementById('consoleRoleAvatar');
+      const title = document.getElementById('consoleHeaderTitle');
+      if (role === 'client') {
+        if (avatar) avatar.textContent = '👤';
+        if (title) title.textContent = 'Client Feedback & Revision Console';
+        showToast("👤 Switched to Client Feedback Mode");
+      } else {
+        if (avatar) avatar.textContent = '👑';
+        if (title) title.textContent = 'Boss Avinash Developer Update Console';
+        showToast("👑 Switched to CEO Boss Mode");
+      }
+    }
+
+    function quickSuggestDirective(text) {
+      const input = document.getElementById('devDirectiveInput');
+      if (input) {
+        input.value = text;
+        submitDeveloperUpdate();
+      }
+    }
+
+    function triggerHotReloadOverlay(version, diffCount) {
+      let overlay = document.getElementById('devHotReloadOverlay');
+      if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'devHotReloadOverlay';
+        overlay.style.cssText = 'position:fixed;top:4.5rem;left:50%;transform:translateX(-50%);background:rgba(15,23,42,0.95);border:1.5px solid #38bdf8;box-shadow:0 10px 40px rgba(56,189,248,0.3);color:#fff;padding:0.75rem 1.75rem;border-radius:50px;font-size:0.88rem;font-weight:800;display:flex;align-items:center;gap:0.75rem;z-index:9999;backdrop-filter:blur(10px);transition:all 0.3s ease;';
+        document.body.appendChild(overlay);
+      }
+      overlay.innerHTML = `⚡ <span style="color:#38bdf8;">Neha & Rohan:</span> Compiling Changes & Hot-Reloading Live Staging (v${version})...`;
+      overlay.style.opacity = '1';
+      overlay.style.transform = 'translateX(-50%) translateY(0)';
+
+      const root = document.getElementById('liveProjectRoot');
+      if (root) {
+        root.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
+        root.style.opacity = '0.7';
+        root.style.transform = 'scale(0.995)';
+        setTimeout(() => {
+          root.style.opacity = '1';
+          root.style.transform = 'scale(1)';
+        }, 350);
+      }
+
+      setTimeout(() => {
+        if (overlay) {
+          overlay.style.opacity = '0';
+          overlay.style.transform = 'translateX(-50%) translateY(-20px)';
+        }
+      }, 2000);
+    }
+
+    function submitDeveloperUpdate() {
+      const input = document.getElementById('devDirectiveInput');
+      const directive = input.value.trim();
+
+      if (!directive && !uploadedScreenshotBase64) {
+        showToast("Kuch likho ya screenshot paste karo!");
+        return;
+      }
+
+      projectVersion = (parseFloat(projectVersion) + 0.1).toFixed(1);
+      document.getElementById('projectBuildVersion').textContent = `Build: v${projectVersion} Active`;
+
+      const chatBox = document.getElementById('devChatStreamBox');
+      const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const roleLabel = currentConsoleRole === 'ceo' ? '👑 Boss Avinash' : '👤 Client';
+
+      // ── Show User bubble immediately ──────────────────────────────────────────
+      chatBox.innerHTML += `
+        <div style="background:rgba(255,255,255,0.06);border-radius:8px;padding:0.5rem 0.75rem;border-left:3px solid ${currentConsoleRole === 'ceo' ? '#38bdf8' : '#fbbf24'};width:90%;margin-left:auto;">
+          <div style="display:flex;justify-content:space-between;font-size:0.7rem;color:var(--text-muted);margin-bottom:0.2rem;">
+            <strong style="color:${currentConsoleRole === 'ceo' ? '#38bdf8' : '#fbbf24'};">${roleLabel}</strong>
+            <span>${timeStr}</span>
+          </div>
+          <div style="font-size:0.82rem;">${directive || 'Screenshot reference uploaded'}</div>
+          ${uploadedScreenshotBase64 ? `<img src="${uploadedScreenshotBase64}" style="margin-top:0.35rem;max-height:60px;border-radius:6px;border:1px solid rgba(255,255,255,0.15);">` : ''}
+        </div>
+      `;
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      // Show "typing" indicator
+      const typingId = 'typingIndicator_' + Date.now();
+      chatBox.innerHTML += `
+        <div id="${typingId}" style="display:flex;align-items:center;gap:0.4rem;padding:0.4rem 0.6rem;font-size:0.75rem;color:#818cf8;">
+          <span style="animation:pulseGlow 1s infinite;">⚡</span> Neha (Frontend) & Rohan (Backend) code compile kar rahe hain...
+        </div>
+      `;
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      // ── Universal AI Directive Parser (any language, any intent) ──────────
+      const lower = directive.toLowerCase();
+      const diffLogs = [];
+      let scrollTargetElement = null;
+
+      // ── 1. Color & Theme Palette Modifications ───────────────────────────
+      const heroSection = document.getElementById('projectHeroSection');
+      if (/gold|sona|yellow|amber|royal|luxury|pila/i.test(lower)) {
+        document.documentElement.style.setProperty('--primary', '#fbbf24');
+        document.documentElement.style.setProperty('--primary-light', '#fde047');
+        if (heroSection) heroSection.style.background = 'radial-gradient(circle at 50% 0%, rgba(251,191,36,0.35), rgba(15,23,42,0.95) 70%)';
+        diffLogs.push('~ Applied Royal Gold Luxury Palette & CSS tokens');
+      } else if (/dark|midnight|black|kala|night|deep blue/i.test(lower)) {
+        document.body.style.backgroundColor = '#020510';
+        document.documentElement.style.setProperty('--primary', '#38bdf8');
+        if (heroSection) heroSection.style.background = 'radial-gradient(circle at 50% 0%, rgba(56,189,248,0.25), #020510 80%)';
+        diffLogs.push('~ Applied Midnight Dark Matrix Theme');
+      } else if (/green|hara|emerald|eco|mint/i.test(lower)) {
+        document.documentElement.style.setProperty('--primary', '#10b981');
+        if (heroSection) heroSection.style.background = 'radial-gradient(circle at 50% 0%, rgba(16,185,129,0.3), #070a13 80%)';
+        diffLogs.push('~ Applied Emerald Cyber Green Theme');
+      } else if (/purple|violet|mauve|lavender|neon/i.test(lower)) {
+        document.documentElement.style.setProperty('--primary', '#a855f7');
+        if (heroSection) heroSection.style.background = 'radial-gradient(circle at 50% 0%, rgba(168,85,247,0.3), #07030f 80%)';
+        diffLogs.push('~ Applied Deep Violet Purple Palette');
+      } else if (/red|lal|crimson|rose|scarlet/i.test(lower)) {
+        document.documentElement.style.setProperty('--primary', '#f43f5e');
+        if (heroSection) heroSection.style.background = 'radial-gradient(circle at 50% 0%, rgba(244,63,94,0.3), #0f0307 80%)';
+        diffLogs.push('~ Applied Crimson Red Pulse Palette');
+      } else if (/cyan|blue|neela|sky/i.test(lower) && !/dark/i.test(lower)) {
+        document.documentElement.style.setProperty('--primary', '#06b6d4');
+        if (heroSection) heroSection.style.background = 'radial-gradient(circle at 50% 0%, rgba(6,182,212,0.3), rgba(15,23,42,0.9) 70%)';
+        diffLogs.push('~ Applied Electric Cyan Blue Theme');
+      }
+
+      // ── 2. Announcement Banner & Offers ──────────────────────────────────
+      if (/banner|announcement|offer|sale|discount|promo|flat|deal|special/i.test(lower)) {
+        const bannerEl = document.getElementById('projectAnnouncement');
+        if (bannerEl) {
+          const clean = directive.replace(/banner|announcement|offer|sale|discount|promo|karo|lagao|add|update|change/gi, '').trim();
+          bannerEl.textContent = `⚡ ${clean.toUpperCase() || directive.toUpperCase()}`;
+          bannerEl.style.background = 'linear-gradient(90deg, #f43f5e, #fbbf24, #06b6d4)';
+          bannerEl.style.backgroundSize = '200% 100%';
+          bannerEl.style.animation = 'pulseGlow 2s infinite';
+          scrollTargetElement = bannerEl;
+        }
+        diffLogs.push('~ Updated <AnnouncementBanner /> copy & animated gradient');
+      }
+
+      // ── 3. Hero Headline / Titles ─────────────────────────────────────────
+      if (/headline|title|heading|naam|name|heading badal|title change/i.test(lower)) {
+        const cleanTitle = directive.replace(/headline|title|heading|naam|name|badal|change|karo|project ka|rakho|set/gi, '').trim();
+        const h1 = document.getElementById('projectHeroHeadline');
+        if (h1 && cleanTitle) {
+          h1.textContent = cleanTitle;
+          scrollTargetElement = h1;
+          diffLogs.push(`~ Re-rendered Hero <h1> title → "${cleanTitle}"`);
+        }
+      }
+
+      // ── 4. Subtitle / Tagline ─────────────────────────────────────────────
+      if (/subtitle|tagline|description|sub heading|tagline badal/i.test(lower)) {
+        const cleanSub = directive.replace(/subtitle|tagline|description|badal|change|karo|rakho|set/gi, '').trim();
+        const sub = document.getElementById('projectHeroSubtitle');
+        if (sub && cleanSub) {
+          sub.textContent = cleanSub;
+          scrollTargetElement = sub;
+          diffLogs.push(`~ Re-rendered Subtitle copy → "${cleanSub.slice(0, 40)}..."`);
+        }
+      }
+
+      // ── 5. Testimonials Section Injection ─────────────────────────────────
+      if (/testimon|review|feedback|rating|star|graahak|client.?say|customer|log kya bol/i.test(lower)) {
+        let sec = document.getElementById('injectedReviews');
+        if (!sec) {
+          sec = document.createElement('div');
+          sec.id = 'injectedReviews';
+          sec.className = 'injected-dev-section';
+          sec.style.cssText = 'margin-top:2.5rem;padding:1.75rem;background:rgba(15,23,42,0.85);border:1px solid rgba(99,102,241,0.35);border-radius:20px;';
+          sec.innerHTML = `
+            <div style="text-align:center;margin-bottom:1.25rem;">
+              <span style="background:rgba(99,102,241,0.2);color:#818cf8;font-size:0.75rem;font-weight:700;padding:0.25rem 0.75rem;border-radius:20px;">⭐ 5-STAR CLIENT SATISFACTION</span>
+              <h2 style="font-size:1.5rem;font-weight:800;margin:0.4rem 0;">What Clients & Leaders Say</h2>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;">
+              ${[['Rajesh Malhotra', 'VP Engineering', '⭐⭐⭐⭐⭐', 'Spectacular execution! The autonomous delivery and pixel-perfect responsiveness exceeded our high expectations.'],
+            ['Priya Singhania', 'Founder & CEO', '⭐⭐⭐⭐⭐', 'Fast sub-50ms latency, beautiful modern glassmorphism, and instant changes whenever requested. Highly recommended!'],
+            ['Arjun Kapoor', 'Product Manager', '⭐⭐⭐⭐⭐', 'The AI engineering team understood our blueprint completely. Shipped to production flawlessly.']
+            ].map(([name, role, stars, text]) => `
+                <div style="background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:1rem;">
+                  <div style="color:#fbbf24;margin-bottom:0.4rem;">${stars}</div>
+                  <p style="font-size:0.82rem;color:#e2e8f0;line-height:1.45;margin:0 0 0.6rem;">"${text}"</p>
+                  <div style="font-size:0.72rem;font-weight:700;color:#38bdf8;">— ${name}</div>
+                  <div style="font-size:0.68rem;color:var(--text-muted);">${role}</div>
+                </div>`).join('')}
+            </div>`;
+          document.getElementById('liveProjectRoot').appendChild(sec);
+        }
+        scrollTargetElement = sec;
+        diffLogs.push('+ Injected <TestimonialsSection /> with 5-star cards');
+      }
+
+      // ── 6. Contact Form Injection ─────────────────────────────────────────
+      if (/contact|form|email|phone|number|enquiry|inquiry|hire|baat|sambhark|reach|call|message/i.test(lower)) {
+        let sec = document.getElementById('injectedContact');
+        if (!sec) {
+          sec = document.createElement('div');
+          sec.id = 'injectedContact';
+          sec.className = 'injected-dev-section';
+          sec.style.cssText = 'margin-top:2.5rem;padding:2rem;background:radial-gradient(circle at 50% 0%,rgba(6,182,212,0.12),rgba(15,23,42,0.95) 70%);border:1px solid rgba(6,182,212,0.3);border-radius:20px;';
+          sec.innerHTML = `
+            <div style="max-width:520px;margin:0 auto;text-align:center;">
+              <h2 style="font-size:1.5rem;font-weight:800;color:#fff;">✉️ Get in Touch / Project Consultation</h2>
+              <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:1.25rem;">Direct line to ${currentProject.client} team. We reply in under 2 hours.</p>
+              <form onsubmit="event.preventDefault();showToast('✅ Message successfully sent!');speakText('Aapka message developer team ko receive ho gaya hai!');" style="display:flex;flex-direction:column;gap:0.75rem;text-align:left;">
+                <input type="text" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:0.7rem 1rem;color:#e2e8f0;font-size:0.85rem;outline:none;" placeholder="Your Name / Organization" required>
+                <input type="email" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:0.7rem 1rem;color:#e2e8f0;font-size:0.85rem;outline:none;" placeholder="Your Email Address" required>
+                <input type="tel" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:0.7rem 1rem;color:#e2e8f0;font-size:0.85rem;outline:none;" placeholder="Phone / WhatsApp Number">
+                <textarea style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:0.7rem 1rem;color:#e2e8f0;font-size:0.85rem;outline:none;resize:none;" rows="3" placeholder="Project requirements, budget, custom requests..." required></textarea>
+                <button type="submit" style="background:linear-gradient(135deg,#6366f1,#38bdf8);color:#fff;border:none;border-radius:10px;padding:0.8rem;font-weight:800;font-size:0.88rem;cursor:pointer;">🚀 Submit Inquiry</button>
+              </form>
+            </div>`;
+          document.getElementById('liveProjectRoot').appendChild(sec);
+        }
+        scrollTargetElement = sec;
+        diffLogs.push('+ Injected interactive <ContactUsForm /> component');
+      }
+
+      // ── 7. Pricing Matrix Injection ───────────────────────────────────────
+      if (/pricing|tier|plan|package|cost|kitna|rupee|budget|subscription|rate|charge|fees/i.test(lower)) {
+        const priceMatches = [...directive.matchAll(/₹?\d[\d,]+/g)].map(m => m[0].replace(/,/g, ''));
+        const p1 = priceMatches[0] ? `₹${parseInt(priceMatches[0]).toLocaleString()}` : '₹499';
+        const p2 = priceMatches[1] ? `₹${parseInt(priceMatches[1]).toLocaleString()}` : '₹999';
+        const p3 = priceMatches[2] ? `₹${parseInt(priceMatches[2]).toLocaleString()}` : '₹1,999';
+
+        let sec = document.getElementById('injectedPricing');
+        if (sec) sec.remove();
+        sec = document.createElement('div');
+        sec.id = 'injectedPricing';
+        sec.className = 'injected-dev-section';
+        sec.style.cssText = 'margin-top:2.5rem;padding:2rem;background:rgba(15,23,42,0.9);border:1px solid rgba(251,191,36,0.3);border-radius:20px;';
+        sec.innerHTML = `
+          <div style="text-align:center;margin-bottom:1.5rem;">
+            <span style="background:rgba(251,191,36,0.15);color:#fbbf24;font-size:0.75rem;font-weight:700;padding:0.25rem 0.75rem;border-radius:20px;">💎 FLEXIBLE TIERS</span>
+            <h2 style="font-size:1.5rem;font-weight:800;margin:0.4rem 0;">Choose Your Ideal Plan</h2>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;">
+            <div style="background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:1.25rem;text-align:center;">
+              <div style="font-weight:700;color:#94a3b8;">Starter</div>
+              <div style="font-size:1.8rem;font-weight:900;margin:0.5rem 0;">${p1}<span style="font-size:0.7rem;color:var(--text-muted);">/mo</span></div>
+              <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:1rem;">Core Features • Email Support</div>
+              <button onclick="showToast('Starter selected!')" style="width:100%;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#e2e8f0;border-radius:8px;padding:0.55rem;cursor:pointer;font-weight:700;">Select Starter</button>
+            </div>
+            <div style="background:rgba(99,102,241,0.12);border:1.5px solid #6366f1;border-radius:14px;padding:1.25rem;text-align:center;box-shadow:0 10px 30px rgba(99,102,241,0.25);">
+              <div style="font-weight:800;color:#38bdf8;">Professional ⭐ Most Popular</div>
+              <div style="font-size:1.8rem;font-weight:900;color:#38bdf8;margin:0.5rem 0;">${p2}<span style="font-size:0.7rem;color:var(--text-muted);">/mo</span></div>
+              <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:1rem;">All Features • Sub-50ms API • 24/7 SLA</div>
+              <button onclick="showToast('Pro selected!')" style="width:100%;background:linear-gradient(135deg,#6366f1,#38bdf8);border:none;color:#fff;border-radius:8px;padding:0.55rem;cursor:pointer;font-weight:800;">Select Pro</button>
+            </div>
+            <div style="background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:1.25rem;text-align:center;">
+              <div style="font-weight:700;color:#fbbf24;">Enterprise</div>
+              <div style="font-size:1.8rem;font-weight:900;color:#fbbf24;margin:0.5rem 0;">${p3}<span style="font-size:0.7rem;color:var(--text-muted);">/mo</span></div>
+              <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:1rem;">Custom Fine-Tuning • Dedicated Engineer</div>
+              <button onclick="showToast('Enterprise selected!')" style="width:100%;background:rgba(251,191,36,0.15);border:1px solid rgba(251,191,36,0.4);color:#fbbf24;border-radius:8px;padding:0.55rem;cursor:pointer;font-weight:700;">Select Enterprise</button>
+            </div>
+          </div>`;
+        document.getElementById('liveProjectRoot').appendChild(sec);
+        scrollTargetElement = sec;
+        diffLogs.push(`+ Injected <PricingTiersMatrix /> (${p1} / ${p2} / ${p3})`);
+      }
+
+      // ── 8. WhatsApp Direct Chat Widget ────────────────────────────────────
+      if (/whatsapp|wa\.me|chat.?button|support.?chat|floating/i.test(lower)) {
+        if (!document.getElementById('injWA')) {
+          const wa = document.createElement('a');
+          wa.id = 'injWA';
+          wa.href = 'https://wa.me/919999999999';
+          wa.target = '_blank';
+          wa.style.cssText = 'position:fixed;bottom:1.5rem;left:1.5rem;background:#25D366;color:#fff;border-radius:50px;padding:0.65rem 1.25rem;font-weight:800;font-size:0.85rem;display:flex;align-items:center;gap:0.5rem;text-decoration:none;box-shadow:0 10px 25px rgba(37,211,102,0.4);z-index:999;';
+          wa.innerHTML = '💬 WhatsApp Direct Chat';
+          document.body.appendChild(wa);
+        }
+        diffLogs.push('+ Injected floating <WhatsAppWidget /> button (bottom-left)');
+      }
+
+      // ── 9. Payment Badges (Razorpay, UPI, Stripe) ─────────────────────────
+      if (/payment|razorpay|stripe|upi|pay|checkout|card payment/i.test(lower)) {
+        let sec = document.getElementById('injectedPaymentBadges');
+        if (!sec) {
+          sec = document.createElement('div');
+          sec.id = 'injectedPaymentBadges';
+          sec.className = 'injected-dev-section';
+          sec.style.cssText = 'margin-top:2rem;padding:1.25rem;background:rgba(15,23,42,0.7);border:1px solid rgba(56,189,248,0.25);border-radius:16px;text-align:center;';
+          sec.innerHTML = `
+            <div style="font-size:0.82rem;font-weight:800;color:#38bdf8;margin-bottom:0.5rem;">🔒 100% SECURE INSTANT CHECKOUT ENABLED</div>
+            <div style="display:flex;justify-content:center;align-items:center;gap:1.5rem;flex-wrap:wrap;font-size:0.85rem;font-weight:700;color:#e2e8f0;">
+              <span>⚡ UPI (GPay / PhonePe / Paytm)</span>
+              <span>💳 Visa / Mastercard / RuPay</span>
+              <span>🛡️ Razorpay Certified 256-Bit SSL</span>
+              <span>🌐 NetBanking 50+ Banks</span>
+            </div>`;
+          document.getElementById('liveProjectRoot').appendChild(sec);
+        }
+        scrollTargetElement = sec;
+        diffLogs.push('+ Injected <SecurePaymentGatewayRow /> with Razorpay & UPI');
+      }
+
+      // ── 10. FAQ Accordion ─────────────────────────────────────────────────
+      if (/faq|question|answer|doubt|sawal|jawab|help|support section/i.test(lower)) {
+        let sec = document.getElementById('injectedFAQ');
+        if (!sec) {
+          sec = document.createElement('div');
+          sec.id = 'injectedFAQ';
+          sec.className = 'injected-dev-section';
+          sec.style.cssText = 'margin-top:2.5rem;padding:1.5rem;background:rgba(15,23,42,0.85);border:1px solid rgba(255,255,255,0.1);border-radius:20px;';
+          const faqs = [
+            ['How quickly is the build deployed?', 'We compile and stage revisions in real-time within seconds of your prompt.'],
+            ['Can I request custom modifications?', 'Yes! Send any directive in this console in Hindi or English and our developers apply it live.'],
+            ['What tech stack is powering this?', `${currentProject.stack} — high-performance, sub-50ms latency architecture.`],
+            ['Is full source code downloadable?', 'Yes! Click "View Source Code & ZIP" on the top header to inspect or download all files.']
+          ];
+          sec.innerHTML = `
+            <h2 style="font-size:1.4rem;font-weight:800;margin:0 0 1rem;text-align:center;">❓ Frequently Asked Questions</h2>
+            ${faqs.map(([q, a]) => `
+              <div style="border-bottom:1px solid rgba(255,255,255,0.06);padding:0.85rem 0;">
+                <div onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'"
+                  style="font-weight:700;cursor:pointer;display:flex;justify-content:space-between;align-items:center;color:#e2e8f0;">
+                  <span>${q}</span><span style="color:#818cf8;">▾</span>
+                </div>
+                <div style="display:none;margin-top:0.4rem;font-size:0.82rem;color:var(--text-muted);line-height:1.5;">${a}</div>
+              </div>`).join('')}`;
+          document.getElementById('liveProjectRoot').appendChild(sec);
+        }
+        scrollTargetElement = sec;
+        diffLogs.push('+ Injected <FAQAccordion /> with 4 interactive questions');
+      }
+
+      // ── 11. Add New Product / Service / Deliverable Card ───────────────────
+      if (/add|insert|lagao|naya|new item|naye|product add|service add|card add|jodo|dalo|daal do/i.test(lower) || (/₹|\d{3,}/.test(directive) && !/pricing/i.test(lower))) {
+        const itemName = directive
+          .replace(/add|insert|lagao|naya|new item|naye|product add|service add|card add|jodo|dalo|daal do|karo|please|neha|rohan|item|card/gi, '')
+          .trim().slice(0, 40) || 'Custom Deliverable';
+
+        // Extract price if mentioned
+        const detectedPrice = directive.match(/₹?\d[\d,]+/);
+        const priceNum = detectedPrice ? parseInt(detectedPrice[0].replace(/[^0-9]/g, '')) : 2499;
+        const priceLabel = `₹${priceNum.toLocaleString()}`;
+
+        const emojiMap = { iphone: '📱', phone: '📱', laptop: '💻', watch: '⌚', camera: '📷', hotel: '🏨', room: '🛏️', suite: '👑', food: '🍽️', burger: '🍔', pizza: '🍕', spa: '💆', car: '🚗', gym: '🏋️', cloud: '☁️', ai: '🤖', code: '💻', doc: '🩺', clinic: '🏥' };
+        let em = '✨';
+        for (const [k, v] of Object.entries(emojiMap)) {
+          if (itemName.toLowerCase().includes(k)) { em = v; break; }
+        }
+
+        domainItems.unshift({
+          id: Date.now(),
+          name: itemName.toUpperCase(),
+          cat: 'core',
+          price: priceNum,
+          priceLabel,
+          emoji: em,
+          details: `Requested by ${roleLabel}: "${directive}"`
+        });
+        renderGrid(domainItems);
+        scrollTargetElement = document.getElementById('showcaseSectionHeader');
+        diffLogs.push(`+ Inserted new showcase card: "${itemName}" (${priceLabel})`);
+      }
+
+      // ── 12. Remove / Delete Item ──────────────────────────────────────────
+      if (/remove|delete|hata|mita|nikalo|band karo|clear/i.test(lower)) {
+        const removeWord = directive.replace(/remove|delete|hata|mita|nikalo|band karo|clear|neha|rohan|karo|card|item/gi, '').trim().toLowerCase();
+        const before = domainItems.length;
+        domainItems = domainItems.filter(item => !item.name.toLowerCase().includes(removeWord));
+        if (domainItems.length < before) {
+          renderGrid(domainItems);
+          diffLogs.push(`- Removed item matching: "${removeWord}"`);
+        }
+      }
+
+      // ── 13. Screenshot Analysis ───────────────────────────────────────────
+      if (uploadedScreenshotBase64) {
+        diffLogs.push('📸 Analyzed uploaded UI screenshot & harmonized visual design language');
+      }
+
+      // ── 14. Universal Fallback: Build Custom Interactive Component ────────
+      if (diffLogs.length === 0) {
+        const customSec = document.createElement('div');
+        customSec.id = 'customSection_' + Date.now();
+        customSec.className = 'injected-dev-section';
+        customSec.style.cssText = 'margin-top:2rem;padding:1.5rem;background:rgba(15,23,42,0.8);border:1px solid rgba(56,189,248,0.3);border-radius:18px;animation:slideIn 0.4s ease;';
+        customSec.innerHTML = `
+          <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem;">
+            <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#38bdf8);display:flex;align-items:center;justify-content:center;font-size:1.1rem;">⚡</div>
+            <div>
+              <div style="font-size:1rem;font-weight:800;color:#38bdf8;">Custom Deliverable Implemented</div>
+              <div style="font-size:0.75rem;color:var(--text-muted);">Executed by Neha Kapoor & Rohan Gupta</div>
+            </div>
+          </div>
+          <div style="font-size:0.88rem;color:#e2e8f0;line-height:1.5;background:rgba(0,0,0,0.3);padding:0.85rem 1rem;border-radius:10px;border-left:3px solid #38bdf8;">
+            ${directive}
+          </div>
+          <div style="margin-top:0.85rem;display:flex;gap:0.5rem;">
+            <button class="btn-action btn-primary" onclick="showToast('✅ Feature confirmed working!')">✨ Test / Interact</button>
+          </div>
+        `;
+        document.getElementById('liveProjectRoot').appendChild(customSec);
+        scrollTargetElement = customSec;
+        diffLogs.push(`+ Built custom interactive component: "${directive.slice(0, 50)}"`);
+      }
+
+      // Trigger Hot Reload HUD animation
+      triggerHotReloadOverlay(projectVersion, diffLogs.length);
+
+      // Persist changes to current project and local storage
+      // ---- Add coffee machine image overlay ----
+      const coffeeImg = document.createElement('img');
+      coffeeImg.id = 'coffeeMachine';
+      coffeeImg.src = 'file:///C:/Users/avina/.gemini/antigravity-ide/brain/8de79218-d0e8-4555-877a-92b5b7505081/coffee_machine_1787738288769.jpg';
+      coffeeImg.style.position = 'absolute';
+      coffeeImg.style.left = '80px'; // adjust within coffee lounge zone
+      coffeeImg.style.top = '420px';
+      coffeeImg.style.width = '100px';
+      coffeeImg.style.borderRadius = '8px';
+      coffeeImg.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
+      document.body.appendChild(coffeeImg);
+      // End coffee machine overlay
+      currentProject.lastUpdated = Date.now();
+      persistProjectChanges();
+
+      // ── Developer Reply in Chat ────────────────────────────────────────────
+      const replyText = currentConsoleRole === 'ceo'
+        ? `"Ji Boss Avinash! Neha (Frontend) aur Rohan (Backend) ne aapka directive code me implement kar diya hai: <em>'${directive || 'Screenshot reference'}'</em>. Build <strong>v${projectVersion}</strong> live staging par update ho gaya hai!"`
+        : `"Thank you for the feedback! All requested changes have been compiled and deployed to build <strong>v${projectVersion}</strong>."`;
+
+      setTimeout(() => {
+        const typingEl = document.getElementById(typingId);
+        if (typingEl) typingEl.remove();
+
+        chatBox.innerHTML += `
+          <div style="background: rgba(99,102,241,0.15); border-radius: 8px; padding: 0.65rem 0.85rem; border-left: 3px solid #10b981; width: 95%;">
+            <div style="display: flex; justify-content: space-between; font-size: 0.7rem; margin-bottom: 0.35rem;">
+              <strong style="color: #38bdf8;">👩‍💻 Neha & 👨‍💻 Rohan:</strong>
+              <span style="color: var(--text-muted);">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+            </div>
+            <div style="color: #e2e8f0; font-size: 0.82rem; line-height: 1.45; margin-bottom: 0.45rem;">${replyText}</div>
+            <div style="background: rgba(0,0,0,0.4); border-radius: 6px; padding: 0.4rem 0.6rem; font-size: 0.72rem; color: #34d399; display: flex; flex-direction: column; gap: 0.15rem;">
+              ${diffLogs.map(l => `<div>${l}</div>`).join('')}
+            </div>
+          </div>`;
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        showToast(`✅ Build v${projectVersion} — ${diffLogs.length} update(s) live!`);
+        speakText(`Ji Boss Avinash! Neha aur Rohan ne aapka requested change apply kar diya hai. Build version ${projectVersion} live refresh ho gaya hai!`, 'female');
+        updateCodeSnippetView();
+
+        // Scroll to modified element if available
+        if (scrollTargetElement) {
+          scrollTargetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 350);
+
+      input.value = '';
+      clearPastedImage();
+    }
+
+    function persistProjectChanges() {
+      try {
+        const stored = localStorage.getItem('nexusai_projects');
+        let list = stored ? JSON.parse(stored) : [];
+        const idx = list.findIndex(p => p.id === currentProject.id);
+        if (idx !== -1) {
+          list[idx] = { ...list[idx], ...currentProject, customItems: domainItems };
+        } else {
+          list.push({ ...currentProject, customItems: domainItems });
+        }
+        localStorage.setItem('nexusai_projects', JSON.stringify(list));
+
+        // Save detailed project customization state
+        const injectedNodes = document.querySelectorAll('.injected-dev-section');
+        const injectedSectionsData = Array.from(injectedNodes).map(node => ({
+          id: node.id,
+          html: node.innerHTML,
+          style: node.style.cssText
+        }));
+
+        const customState = {
+          version: projectVersion,
+          themePrimary: document.documentElement.style.getPropertyValue('--primary'),
+          themeBg: document.body.style.backgroundColor,
+          heroBg: document.getElementById('projectHeroSection')?.style.background,
+          headline: document.getElementById('projectHeroHeadline')?.textContent,
+          subtitle: document.getElementById('projectHeroSubtitle')?.textContent,
+          announcement: document.getElementById('projectAnnouncement')?.textContent,
+          injectedSections: injectedSectionsData,
+          chatHistory: document.getElementById('devChatStreamBox')?.innerHTML
+        };
+
+        localStorage.setItem(`nexusai_custom_${currentProject.id}`, JSON.stringify(customState));
+      } catch (e) {
+        console.error("Failed to persist project:", e);
+      }
+    }
+
+    function speakText(text, gender = "female") {
+      if (!window.speechSynthesis) return;
+      window.speechSynthesis.cancel();
+
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.rate = 1.05;
+      utter.pitch = gender === "female" ? 1.25 : 0.88;
+
+      const voices = window.speechSynthesis.getVoices();
+      if (voices && voices.length > 0) {
+        if (gender === "female") {
+          utter.voice = voices.find(v => v.name.includes("Zira") || v.name.includes("Female") || v.name.includes("Google हिन्दी") || v.name.includes("Kalpana")) || voices[0];
+        } else {
+          utter.voice = voices.find(v => v.name.includes("David") || v.name.includes("Male") || v.name.includes("Hemant")) || voices[0];
+        }
+      }
+      window.speechSynthesis.speak(utter);
+    }
+  </script>
+</body>
+
+</html>

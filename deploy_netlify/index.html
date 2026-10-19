@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NexusAI - Autonomous AI Office Operating System | Avinash Tiwari</title>
+  <meta name="description"
+    content="Official autonomous virtual office of Avinash Tiwari (Owner & CEO). Features 14 live AI employees, 3D WebGL Metaverse, sales CRM leads pipeline, and owner directive command center.">
+  <meta name="keywords"
+    content="Avinash Tiwari, AI Virtual Office, NexusAI, Autonomous AI Employees, 3D Metaverse Office, AI Command Center, AI CRM">
+  <meta name="author" content="Avinash Tiwari (Owner / CEO)">
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+
+  <!-- OpenGraph / Facebook / WhatsApp SEO -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://nexusai-avinash-office.live/">
+  <meta property="og:title" content="NexusAI - Autonomous AI Office Operating System | Avinash Tiwari">
+  <meta property="og:description"
+    content="Live Autonomous Virtual Office featuring 14 AI employees, 3D/2D interactive floor, Kanban, CRM, and biometric security lock.">
+
+  <!-- Google Search Console & Sitemap Link -->
+  <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
+
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="assets/css/office.css">
+
+  <!-- Three.js 3D WebGL Engine & OrbitControls -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+
+  <!-- Futuristic Cyber Security Lock Overlay -->
+  <div id="nexusLockOverlay" class="nexus-lock-overlay" style="display: flex;">
+    <div id="nexusLockCard" class="nexus-lock-card">
+      <div class="lock-scanner-line"></div>
+
+      <!-- Rotating Ring Glowing Avatar -->
+      <div class="lock-avatar-container">
+        <div class="lock-avatar-ring-outer"></div>
+        <div class="lock-avatar-ring"></div>
+        <div class="lock-avatar-core">
+          <i data-lucide="shield-check" style="width: 32px; height: 32px;"></i>
+        </div>
+      </div>
+
+      <div class="lock-card-content">
+        <div class="lock-badge">
+          <i data-lucide="lock" style="width: 12px; height: 12px;"></i>
+          <span>SECURE GATEWAY v4.2</span>
+        </div>
+
+        <h2 class="lock-title">NEXUS AI CORPORATE OS</h2>
+        <p class="lock-desc" id="lockStatusText">
+          🔒 <span style="color: var(--secondary);">RESTRICTED ACCESS • BIOMETRIC & PASSCODE REQUIRED</span>
+        </p>
+
+        <div class="lock-identity-pill">
+          <i data-lucide="crown" style="width: 14px; height: 14px; color: #fbbf24;"></i>
+          <span>Authorized CEO: <strong>AVINASH TIWARI</strong></span>
+        </div>
+
+        <!-- Input Group -->
+        <div class="lock-input-group">
+          <div class="lock-input-icon">
+            <i data-lucide="key-round" style="width: 18px; height: 18px;"></i>
+          </div>
+          <input type="password" id="lockPasscodeInput" class="lock-input" placeholder="ENTER PASSCODE..."
+            autocomplete="current-password" spellcheck="false">
+          <button type="button" class="lock-eye-btn" onclick="toggleLockPassVisibility()" title="Show/Hide Passcode">
+            <i id="lockEyeIcon" data-lucide="eye" style="width: 18px; height: 18px;"></i>
+          </button>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="button" class="btn-cyber-unlock" onclick="submitOfficeUnlock()">
+          <i data-lucide="unlock" style="width: 18px; height: 18px;"></i>
+          <span>AUTHENTICATE & UNLOCK</span>
+        </button>
+
+        <!-- Error / Status Message -->
+        <div id="lockErrorMessage" class="lock-error-msg"></div>
+
+        <!-- Footer actions -->
+        <div class="lock-footer-actions">
+          <span style="color: var(--text-sub); font-size: 0.72rem; display: flex; align-items: center; gap: 4px;">
+            <i data-lucide="shield" style="width: 12px; height: 12px; color: var(--secondary);"></i> 256-Bit Encrypted
+          </span>
+          <button type="button" class="lock-link-btn" onclick="openChangePasswordModal()">
+            ⚙️ Change Passcode
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Change Passcode Modal -->
+  <div id="changePasswordModal" class="security-modal-overlay">
+    <div class="glass-card"
+      style="width: 100%; max-width: 400px; padding: 1.75rem; border: 1px solid rgba(99, 102, 241, 0.4); box-shadow: 0 20px 50px rgba(0,0,0,0.8);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+        <h3 style="font-size: 1.15rem; color: #f8fafc; display: flex; align-items: center; gap: 0.5rem;">
+          <i data-lucide="key" style="color: #38bdf8; width: 18px;"></i> Change Security Passcode
+        </h3>
+        <button onclick="closeChangePasswordModal()"
+          style="background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.2rem;">&times;</button>
+      </div>
+
+      <div style="margin-bottom: 1rem;">
+        <label style="font-size: 0.75rem; color: var(--text-muted); display: block; margin-bottom: 0.35rem;">Current
+          Passcode</label>
+        <input type="password" id="currPassInput" class="form-input" style="width: 100%; padding: 0.65rem;"
+          placeholder="Enter current passcode">
+      </div>
+
+      <div style="margin-bottom: 1rem;">
+        <label style="font-size: 0.75rem; color: var(--text-muted); display: block; margin-bottom: 0.35rem;">New
+          Passcode (min 4 chars)</label>
+        <input type="password" id="newPassInput" class="form-input" style="width: 100%; padding: 0.65rem;"
+          placeholder="Enter new passcode">
+      </div>
+
+      <div style="margin-bottom: 1rem;">
+        <label style="font-size: 0.75rem; color: var(--text-muted); display: block; margin-bottom: 0.35rem;">Confirm New
+          Passcode</label>
+        <input type="password" id="confirmPassInput" class="form-input" style="width: 100%; padding: 0.65rem;"
+          placeholder="Confirm new passcode">
+      </div>
+
+      <div id="changePassError" style="font-size: 0.8rem; margin-bottom: 1rem; min-height: 1.2rem; font-weight: 600;">
+      </div>
+
+      <div style="display: flex; gap: 0.75rem; justify-content: flex-end;">
+        <button class="btn btn-sm" onclick="closeChangePasswordModal()"
+          style="background: rgba(255,255,255,0.06); color: var(--text-muted);">Cancel</button>
+        <button class="btn btn-primary btn-sm" onclick="saveNewOfficePassword()"
+          style="background: linear-gradient(135deg, #10b981, #059669);">Save Passcode</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- App Header -->
+  <header class="app-header">
+    <a href="#" class="brand-logo">
+      <div class="brand-icon">
+        <i data-lucide="building-2"></i>
+      </div>
+      <span>Nexus<span
+          style="background: linear-gradient(135deg, #818cf8, #38bdf8); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">AI</span></span>
+    </a>
+
+    <div class="header-stats">
+      <div class="header-chip">
+        <div class="pulse-dot"></div>
+        <span id="activeAgentCountText" style="color: var(--accent-green); font-weight:700;">14 Agents</span>
+      </div>
+
+      <div class="header-chip">
+        <i data-lucide="trending-up" style="color: var(--accent-green); width: 14px;"></i>
+        <span>₹12.4L</span>
+      </div>
+
+      <div class="header-chip">
+        <i data-lucide="folder-kanban" style="color: var(--secondary); width: 14px;"></i>
+        <span>18 Projects</span>
+      </div>
+
+      <!-- Assign New Project Button -->
+      <button class="btn btn-primary btn-sm" onclick="openAssignProjectModal()"
+        style="background: linear-gradient(135deg, #06b6d4, #0284c7); box-shadow: 0 4px 15px rgba(6,182,212,0.35); white-space:nowrap;">
+        🚀 Assign
+      </button>
+
+      <!-- Call All-Hands Meeting Button -->
+      <button class="btn btn-primary btn-sm all-hands-btn" onclick="launchAllHandsMeeting()"
+        style="white-space:nowrap;">
+        📞 All-Hands
+      </button>
+
+      <!-- Company Live Server Top Button (Always Visible & Clickable) -->
+      <button type="button" class="header-server-pill" id="topHeaderServerBtn" onclick="openCompanyServerModal()"
+        title="Open Company Live Server Controls">
+        <span class="pulse-radar-dot" id="topServerPulseDot" style="display: none;"></span>
+        <span class="status-offline-dot" id="topServerOfflineDot"></span>
+        <span>🌐 Live Server</span>
+        <span class="server-pill-status" id="topHeaderServerBadge">LOCAL</span>
+      </button>
+
+      <!-- Combined Unified Split Button: Hire / Fire AI Employee -->
+      <div class="split-agent-pill">
+        <button type="button" class="split-pill-btn split-hire-btn" onclick="openHireModal()"
+          title="Hire New AI Employee">
+          ➕ Hire
+        </button>
+        <div class="split-pill-divider"></div>
+        <button type="button" class="split-pill-btn split-fire-btn" onclick="openFireModal()"
+          title="Fire / Terminate AI Employee">
+          🔥 Fire
+        </button>
+      </div>
+
+      <!-- Emergency Pause AI Button -->
+      <button class="pause-btn" id="pauseAiBtn" onclick="toggleEmergencyPause()">
+        ⏸️ PAUSE ALL AI
+      </button>
+
+      <!-- Lock Office Screen Button (Symbol Only) -->
+      <button class="lock-office-btn" onclick="lockOfficeScreen()" title="Lock Office Screen" aria-label="Lock Office">
+        <i data-lucide="lock" style="width: 17px; height: 17px;"></i>
+      </button>
+
+      <a href="https://www.linkedin.com/in/avinash-tiwari-16011932b?utm_source=share_via&utm_content=profile&utm_medium=member_android"
+        target="_blank" class="header-chip"
+        style="background: rgba(99, 102, 241, 0.15); border-color: rgba(99, 102, 241, 0.3); text-decoration: none; cursor: pointer;"
+        title="View Avinash Tiwari's LinkedIn Profile">
+        <i data-lucide="crown" style="color: #fbbf24; width: 16px;"></i>
+        <span>Role: <strong style="color: var(--primary-light);">AVINASH (OWNER / CEO)</strong> 🔗</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Top Tab Navigation Bar -->
+  <div class="nav-tabs-bar">
+    <div class="nav-tab active" onclick="switchViewTab('officeTab')">
+      <i data-lucide="building"></i> 3D/2D Virtual Office Floor
+    </div>
+    <div class="nav-tab" onclick="switchViewTab('projectTrackerTab')">
+      <i data-lucide="layers" style="color: var(--secondary);"></i> 🚀 Live Projects & Visual Output
+    </div>
+    <div class="nav-tab" onclick="switchViewTab('kanbanTab')">
+      <i data-lucide="kanban"></i> Task Board (Kanban)
+    </div>
+    <div class="nav-tab" onclick="switchViewTab('crmTab')">
+      <i data-lucide="briefcase"></i> Sales CRM & Leads Pipeline
+    </div>
+    <div class="nav-tab" onclick="switchViewTab('approvalsTab')">
+      <i data-lucide="check-square"></i> Approvals & Reports
+    </div>
+  </div>
+
+  <!-- Main Layout -->
+  <div class="office-layout">
+
+    <!-- Left Panel: Hierarchy & Navigation -->
+    <aside class="sidebar-panel">
+
+      <!-- ═══════════════════════════════════════════════════════
+           🌐 COMPANY LIVE SERVER — Premium Visual Card
+           ═══════════════════════════════════════════════════════ -->
+      <div class="company-server-card" id="companyLiveServerCard">
+
+        <!-- Gradient top bar -->
+        <div style="position:absolute;top:0;left:0;right:0;height:2.5px;
+                    background:linear-gradient(90deg,#06b6d4,#6366f1,#10b981,#06b6d4);
+                    background-size:200% 100%;border-radius:14px 14px 0 0;
+                    animation:gradientShift 3s linear infinite;"></div>
+
+        <!-- ── ROW 1: Title + Live Badge ── -->
+        <div style="display:flex;justify-content:space-between;align-items:center;
+                    margin-bottom:0.75rem;margin-top:0.25rem;">
+          <div style="display:flex;align-items:center;gap:0.4rem;">
+            <span style="font-size:1rem;">🌐</span>
+            <span style="font-size:0.85rem;font-weight:800;color:#e2e8f0;
+                         letter-spacing:0.2px;white-space:nowrap;">Company Live Server</span>
+          </div>
+          <span id="serverStatusBadge" class="server-badge offline"
+                style="font-size:0.65rem;padding:0.2rem 0.55rem;">
+            <span class="status-offline-dot"></span>&nbsp;LOCAL
+          </span>
+        </div>
+
+        <!-- ── ROW 2: URL Input + Detect ── -->
+        <div style="background:rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.1);
+                    border-radius:8px;padding:0.4rem 0.5rem;margin-bottom:0.6rem;
+                    display:flex;align-items:center;gap:0.35rem;">
+          <span style="font-size:0.7rem;color:#64748b;flex-shrink:0;">🔗</span>
+          <input type="text" id="serverLocalhostInput"
+                 placeholder="http://127.0.0.1:8000"
+                 onchange="onLocalhostInputChange(this.value)"
+                 style="flex:1;min-width:0;background:transparent;border:none;outline:none;
+                        font-size:0.72rem;color:#38bdf8;font-family:var(--font-mono);">
+          <button type="button" onclick="autoDetectLocalhostUrl(true)"
+                  title="Auto-detect URL"
+                  style="background:rgba(6,182,212,0.2);border:1px solid rgba(6,182,212,0.4);
+                         color:#38bdf8;border-radius:5px;padding:0.15rem 0.4rem;
+                         font-size:0.7rem;cursor:pointer;flex-shrink:0;font-weight:700;">⚡</button>
+        </div>
+
+        <!-- ── ROW 3: BIG GO LIVE BUTTON ── -->
+        <button type="button" id="btnToggleLiveServer"
+                onclick="toggleCompanyLiveServer()"
+                style="width:100%;padding:0.65rem 1rem;
+                       background:linear-gradient(135deg,#06b6d4 0%,#2563eb 100%);
+                       border:none;border-radius:10px;color:#fff;
+                       font-size:0.88rem;font-weight:800;cursor:pointer;
+                       display:flex;align-items:center;justify-content:center;gap:0.5rem;
+                       box-shadow:0 4px 18px rgba(6,182,212,0.45);
+                       transition:all 0.25s ease;letter-spacing:0.3px;
+                       margin-bottom:0.55rem;">
+          <span style="font-size:1rem;">🚀</span>
+          <span>Go Live &amp; Publish</span>
+        </button>
+
+        <!-- ── ROW 4: Live URL Box (visible only when LIVE) ── -->
+        <div id="serverLiveDetailsBox"
+             style="display:none;background:rgba(16,185,129,0.1);
+                    border:1px solid rgba(16,185,129,0.4);border-radius:9px;
+                    padding:0.55rem 0.65rem;margin-bottom:0.5rem;">
+          <div style="font-size:0.68rem;color:#34d399;font-weight:700;
+                      margin-bottom:0.3rem;display:flex;align-items:center;gap:0.3rem;">
+            <span class="pulse-radar-dot"></span> LIVE PUBLIC URL:
+          </div>
+          <div id="serverLiveUrlDisplay"
+               style="font-family:var(--font-mono);font-size:0.73rem;color:#38bdf8;
+                      word-break:break-all;margin-bottom:0.45rem;font-weight:600;">—</div>
+          <div style="display:flex;gap:0.35rem;">
+            <button onclick="openCompanyLiveUrl()"
+                    style="flex:1;padding:0.3rem;background:rgba(6,182,212,0.2);
+                           border:1px solid rgba(6,182,212,0.4);color:#38bdf8;
+                           border-radius:6px;font-size:0.72rem;cursor:pointer;font-weight:600;">
+              🌐 Open
+            </button>
+            <button onclick="copyCompanyLiveUrl()"
+                    style="flex:1;padding:0.3rem;background:rgba(16,185,129,0.2);
+                           border:1px solid rgba(16,185,129,0.4);color:#34d399;
+                           border-radius:6px;font-size:0.72rem;cursor:pointer;font-weight:600;">
+              📋 Copy
+            </button>
+            <button onclick="openServerQrModal()"
+                    style="flex:1;padding:0.3rem;background:rgba(99,102,241,0.2);
+                           border:1px solid rgba(99,102,241,0.4);color:#818cf8;
+                           border-radius:6px;font-size:0.72rem;cursor:pointer;font-weight:600;">
+              📱 QR
+            </button>
+          </div>
+        </div>
+
+        <!-- ── ROW 5: Inline Deployment Log (tiny, collapsible) ── -->
+        <div id="serverDeploymentLog"
+             style="display:none;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.07);
+                    border-radius:7px;padding:0.4rem;max-height:52px;overflow-y:auto;
+                    margin-bottom:0.5rem;"></div>
+
+        <!-- ── ROW 6: Full Controls Button ── -->
+        <button type="button" onclick="openCompanyServerModal()"
+                style="width:100%;padding:0.42rem;
+                       background:rgba(6,182,212,0.08);
+                       border:1px solid rgba(6,182,212,0.35);
+                       color:#38bdf8;border-radius:8px;cursor:pointer;
+                       font-size:0.76rem;font-weight:700;
+                       display:flex;align-items:center;justify-content:center;gap:0.4rem;
+                       transition:all 0.2s ease;">
+          ⚙️ Full Controls &amp; Logs
+        </button>
+
+        <style>
+          @keyframes gradientShift {
+            0%   { background-position: 0% 0%; }
+            100% { background-position: 200% 0%; }
+          }
+          #btnToggleLiveServer:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 22px rgba(6,182,212,0.6) !important;
+          }
+          #btnToggleLiveServer.btn-server-stop {
+            background: linear-gradient(135deg,#f43f5e 0%,#be123c 100%) !important;
+            box-shadow: 0 4px 18px rgba(244,63,94,0.45) !important;
+          }
+        </style>
+      </div>
+
+      <!-- Company Hierarchy Card -->
+      <div class="glass-card" style="padding: 1.25rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+          <div class="nav-group-title" style="margin-bottom: 0;">Company Hierarchy</div>
+          <button class="btn btn-sm" onclick="openHireModal()"
+            style="font-size: 0.7rem; padding: 0.2rem 0.55rem; background: rgba(16, 185, 129, 0.15); color: var(--accent-green); border: 1px solid rgba(16, 185, 129, 0.3);">
+            + Hire
+          </button>
+        </div>
+
+        <div id="sidebarHierarchyContainer">
+          <a href="https://www.linkedin.com/in/avinash-tiwari-16011932b?utm_source=share_via&utm_content=profile&utm_medium=member_android"
+            target="_blank" class="tree-item active" style="text-decoration: none; display: flex; align-items: center;"
+            title="View Avinash Tiwari's LinkedIn Profile">
+            <i data-lucide="crown" style="color: #fbbf24;"></i>
+            <span>Avinash (Owner / CEO)</span>
+            <span class="badge bg-purple">LINKEDIN 🔗</span>
+          </a>
+
+          <div class="tree-item" style="margin-left: 0.75rem;">
+            <i data-lucide="bot" style="color: var(--primary-light);"></i>
+            <span>Head Manager AI</span>
+            <span class="badge bg-purple">Chief</span>
+          </div>
+
+          <div class="tree-item" style="margin-left: 1.5rem;">
+            <i data-lucide="code-2" style="color: var(--secondary);"></i>
+            <span>Project Manager</span>
+            <span class="badge bg-cyan">4 Techs</span>
+          </div>
+
+          <div class="tree-item" style="margin-left: 1.5rem;">
+            <i data-lucide="briefcase" style="color: var(--accent-green);"></i>
+            <span>Sales Manager</span>
+            <span class="badge bg-green">3 Reps</span>
+          </div>
+
+          <div class="tree-item" style="margin-left: 1.5rem;">
+            <i data-lucide="megaphone" style="color: var(--accent-purple);"></i>
+            <span>Marketing Manager</span>
+            <span class="badge bg-gold">3 Team</span>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-sm"
+          style="width: 100%; margin-top: 0.85rem; background: linear-gradient(135deg, #10b981, #059669); justify-content: center;"
+          onclick="openHireModal()">
+          ➕ Hire New AI Agent
+        </button>
+      </div>
+
+      <!-- 4 Lead Generators Quick Control -->
+      <div class="glass-card lead-gen-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+          <h4 style="font-size: 0.9rem; color: var(--text-main);">🎯 4 Lead Generators</h4>
+          <span style="font-size: 0.72rem; color: var(--accent-green); font-weight: 700;">LIVE SCAN</span>
+        </div>
+        <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.85rem;">
+          Autonomous agents scraping business & project opportunities.
+        </p>
+
+        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+          <button class="btn btn-primary btn-sm" style="width: 100%; justify-content: flex-start;"
+            onclick="triggerLeadGenerator(1)">
+            ⚡ Sales Lead Gen 1 (B2B)
+          </button>
+          <button class="btn btn-primary btn-sm"
+            style="width: 100%; justify-content: flex-start; background: linear-gradient(135deg, #06b6d4, #0284c7);"
+            onclick="triggerLeadGenerator(2)">
+            🛒 Sales Lead Gen 2 (SME)
+          </button>
+          <button class="btn btn-primary btn-sm"
+            style="width: 100%; justify-content: flex-start; background: linear-gradient(135deg, #10b981, #059669);"
+            onclick="triggerLeadGenerator(3)">
+            🚀 Project Lead Gen 1 (Web/App)
+          </button>
+          <button class="btn btn-primary btn-sm"
+            style="width: 100%; justify-content: flex-start; background: linear-gradient(135deg, #a855f7, #7e22ce);"
+            onclick="triggerLeadGenerator(4)">
+            🤖 Project Lead Gen 2 (AI/SaaS)
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Center Main Panel: Command Center & Interactive Office Floor / Tabs -->
+    <main class="center-panel">
+
+      <!-- AI Command Center Box -->
+      <div class="glass-card command-box">
+        <div class="command-header">
+          <div class="command-header-title">
+            <span
+              style="background: rgba(251, 191, 36, 0.15); color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.3); padding: 0.2rem 0.55rem; border-radius: 8px; font-size: 0.78rem;">👑
+              CEO DIRECTIVE</span>
+            <span style="margin-left: 0.25rem;">Avinash AI Command Center</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.6rem;">
+            <!-- Aura Speaking Badge -->
+            <span id="auraSpeakingBadge"
+              style="display: none; align-items: center; gap: 0.35rem; background: rgba(99,102,241,0.15); border: 1px solid rgba(99,102,241,0.4); padding: 0.25rem 0.65rem; border-radius: 20px; font-size: 0.75rem; color: #818cf8; font-weight: 700;">
+              🎙️ Aura Speaking…
+            </span>
+            <!-- Voice Toggle Button -->
+            <button id="voiceToggleBtn" onclick="toggleVoice()"
+              style="background: rgba(16,185,129,0.2); border: 1px solid rgba(16,185,129,0.5); color: #10b981; padding: 0.3rem 0.75rem; border-radius: 8px; font-size: 0.78rem; font-weight: 700; cursor: pointer;">
+              🔊 Voice: ON
+            </button>
+            <span
+              style="font-size: 0.8rem; color: var(--primary-light); font-weight: 500; display: flex; align-items: center; gap: 0.4rem;">
+              <span class="pulse-dot"></span> Head Manager AI (Aura) Ready
+            </span>
+          </div>
+        </div>
+
+        <form id="ownerCommandForm">
+          <div class="command-input-wrap">
+            <input type="text" id="ownerCommandInput" class="command-input"
+              placeholder="Type ya 🎤 Mic se bolo — Hindi ya English dono chalega..." required>
+            <!-- Microphone Voice Input Button -->
+            <button type="button" id="micBtn" onclick="startVoiceInput()"
+              style="background: rgba(99,102,241,0.2); border: 1px solid rgba(99,102,241,0.5); color: #818cf8; padding: 0.5rem 0.85rem; border-radius: 10px; font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; gap: 0.3rem; font-weight: 700; transition: all 0.3s ease;">
+              🎤
+            </button>
+            <button type="submit" class="btn btn-primary">
+              <i data-lucide="send"></i> Execute Directive
+            </button>
+          </div>
+          <!-- Listening Indicator -->
+          <div id="listeningBadge"
+            style="display: none; margin-top: 0.5rem; padding: 0.35rem 0.85rem; background: rgba(244, 63, 94, 0.15); border: 1px solid rgba(244, 63, 94, 0.4); border-radius: 20px; font-size: 0.78rem; color: #f43f5e; font-weight: 700; animation: pulse 1.2s infinite; width: fit-content;">
+            🎤 Listening... Boliye Sir!
+          </div>
+        </form>
+
+        <div class="quick-prompts">
+          <span
+            style="font-size: 0.75rem; color: var(--text-sub); display: flex; align-items: center; gap: 0.3rem; margin-right: 0.25rem;">
+            <i data-lucide="zap" style="width: 14px; color: var(--accent-gold);"></i> Quick Directives:
+          </span>
+          <div class="prompt-chip">"Hire a Mobile App Developer AI"</div>
+          <div class="prompt-chip" style="border-color: rgba(239, 68, 68, 0.4); color: #f87171;">"Fire Rohan from
+            Project Bay"</div>
+          <div class="prompt-chip">"Hire a Cyber Security AI Specialist"</div>
+          <div class="prompt-chip">"Start a new website project for Client ABC"</div>
+          <div class="prompt-chip">"Head Manager, give me today's company report."</div>
+          <div class="prompt-chip">"Set the sales target to ₹10 lakh this month."</div>
+          <div class="prompt-chip">"Which projects are delayed?"</div>
+          <div class="prompt-chip">"Show me today's hot leads."</div>
+        </div>
+      </div>
+
+      <!-- TAB 1: Hyper-Realistic Spatial Office Floor (2D Architecture & 3D WebGL) -->
+      <div id="officeTab" class="view-tab-content">
+        <div class="glass-card office-floor" style="padding: 1.25rem;">
+
+          <!-- Office Floor Controls & View Switcher Bar -->
+          <div
+            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.75rem;">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <h3
+                style="font-size: 1.15rem; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 0.4rem; margin: 0;">
+                <span>🏢</span> Corporate Office Floor Plan
+              </h3>
+              <span class="badge"
+                style="background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.75rem;">
+                ● REAL-TIME SIMULATION
+              </span>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <!-- 2D / 3D Mode Toggle Buttons -->
+              <div
+                style="background: rgba(0,0,0,0.4); border: 1px solid var(--border-glass); border-radius: 10px; padding: 3px; display: flex; gap: 4px;">
+                <button type="button" id="viewMode2DBtn" onclick="setOfficeFloorMode('2D')" class="btn btn-sm"
+                  style="background: linear-gradient(135deg, #6366f1, #4f46e5); color: white; font-weight: 700; font-size: 0.78rem; padding: 0.3rem 0.85rem; border-radius: 8px; border: none; cursor: pointer;">
+                  🌟 2D Realistic Blueprint
+                </button>
+                <button type="button" id="viewMode3DBtn" onclick="setOfficeFloorMode('3D')" class="btn btn-sm"
+                  style="background: transparent; color: var(--text-muted); font-weight: 700; font-size: 0.78rem; padding: 0.3rem 0.85rem; border-radius: 8px; border: none; cursor: pointer;">
+                  🏢 3D WebGL Metaverse
+                </button>
+              </div>
+
+              <!-- Walk Simulation Button -->
+              <button type="button" class="btn btn-sm" onclick="triggerAllEmployeesWalk()"
+                style="background: rgba(6, 182, 212, 0.15); border: 1px solid rgba(6, 182, 212, 0.4); color: #38bdf8; font-weight: 700; font-size: 0.78rem; padding: 0.35rem 0.85rem; border-radius: 8px; cursor: pointer;">
+                🚶 Walk All Simulation
+              </button>
+            </div>
+          </div>
+
+          <!-- 2D Canvas Spatial Viewport -->
+          <div class="canvas-wrapper" id="canvasWrapper2D">
+            <canvas id="officeCanvas"></canvas>
+          </div>
+
+          <!-- 3D WebGL Three.js Viewport Container -->
+          <div id="threeCanvasContainer"
+            style="display: none; width: 100%; height: 550px; border-radius: var(--radius-md); overflow: hidden; background: #060911; border: 1px solid var(--border-glass); position: relative;">
+          </div>
+
+          <!-- 3D Camera Preset Viewpoints Bar (Hidden in 2D) -->
+          <div id="threeControlsBar"
+            style="display: none; justify-content: center; gap: 0.5rem; margin-top: 0.75rem; flex-wrap: wrap;">
+            <button class="btn btn-sm" onclick="setThreeCameraView('iso')"
+              style="background: rgba(99,102,241,0.2); color: #818cf8; border: 1px solid rgba(99,102,241,0.4); font-size: 0.75rem;">🎥
+              Isometric View</button>
+            <button class="btn btn-sm" onclick="setThreeCameraView('top')"
+              style="background: rgba(6,182,212,0.2); color: #38bdf8; border: 1px solid rgba(6,182,212,0.4); font-size: 0.75rem;">📐
+              Top-Down Blueprint</button>
+            <button class="btn btn-sm" onclick="setThreeCameraView('cabins')"
+              style="background: rgba(251,191,36,0.2); color: #fbbf24; border: 1px solid rgba(251,191,36,0.4); font-size: 0.75rem;">👑
+              Executive Cabins</button>
+            <button class="btn btn-sm" onclick="setThreeCameraView('meeting')"
+              style="background: rgba(168,85,247,0.2); color: #c084fc; border: 1px solid rgba(168,85,247,0.4); font-size: 0.75rem;">🤝
+              Boardroom 360°</button>
+            <button class="btn btn-sm" onclick="setThreeCameraView('coffee')"
+              style="background: rgba(245,158,11,0.2); color: #f59e0b; border: 1px solid rgba(245,158,11,0.4); font-size: 0.75rem;">☕
+              Espresso Lounge</button>
+          </div>
+
+          <!-- HTML Grid Desk Cards -->
+          <div class="floor-grid" id="officeFloorGrid" style="margin-top: 1.5rem;">
+            <!-- Rendered via JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: Real-Time Project Execution & Live Visual Output -->
+      <div id="projectTrackerTab" class="view-tab-content" style="display: none;">
+        <div class="glass-card" style="padding: 1.5rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+            <div>
+              <h3 style="font-size: 1.3rem; color: #38bdf8; display: flex; align-items: center; gap: 0.5rem;">
+                <span>🚀</span> Real-Time Project Execution & Visual Output
+              </h3>
+              <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 0.2rem;">
+                Watch your AI team autonomously build UI prototypes, backend APIs, and Cypress test suites in real-time.
+              </p>
+            </div>
+            <button class="btn btn-primary" onclick="openAssignProjectModal()"
+              style="background: linear-gradient(135deg, #06b6d4, #0284c7);">
+              ➕ Assign New Project
+            </button>
+          </div>
+
+          <div class="project-tracker-grid">
+            <!-- Left: Active Projects & Sprint Phase Progress -->
+            <div id="activeProjectsListContainer">
+              <!-- Rendered dynamically by JS -->
+            </div>
+
+            <!-- Right: Live Visual Prototype Output & Code Inspector Frame -->
+            <div>
+              <div class="preview-browser-box">
+                <div class="browser-header-bar">
+                  <div class="browser-dots">
+                    <div class="browser-dot" style="background: #f43f5e;"></div>
+                    <div class="browser-dot" style="background: #fbbf24;"></div>
+                    <div class="browser-dot" style="background: #10b981;"></div>
+                  </div>
+                  <div class="browser-address-bar" id="livePreviewAddressBar">
+                    https://nexusai.staging.app/client-preview
+                  </div>
+                  <span style="font-size: 0.72rem; color: #10b981; font-weight: 700;">● LIVE DEV SERVER</span>
+                </div>
+
+                <!-- Interactive Visual UI Output -->
+                <div class="preview-content-render" id="liveVisualPreviewRender">
+                  <!-- Rendered dynamically by JS -->
+                </div>
+              </div>
+
+              <!-- Live Generated Code Inspector -->
+              <div style="margin-top: 1rem;">
+                <div
+                  style="font-size: 0.78rem; font-weight: 700; color: var(--text-sub); text-transform: uppercase; margin-bottom: 0.4rem; display: flex; justify-content: space-between;">
+                  <span>💻 Generated Code & Architecture (Live Sync)</span>
+                  <span id="activeProjectTechBadge" style="color: #38bdf8; font-weight: 600;">React + Node.js +
+                    Tailwind</span>
+                </div>
+                <div class="code-inspector-block" id="liveGeneratedCodeInspector">
+                  // Waiting for active project sprint build...
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: Task Kanban Board -->
+      <div id="kanbanTab" class="view-tab-content" style="display: none;">
+        <div class="glass-card" style="padding: 1.5rem;">
+          <h3 style="font-size: 1.2rem; margin-bottom: 1rem;">📋 Company Task Management (Kanban)</h3>
+          <div id="kanbanContainer" class="kanban-grid"></div>
+        </div>
+      </div>
+
+      <!-- TAB 3: Sales CRM Pipeline -->
+      <div id="crmTab" class="view-tab-content" style="display: none;">
+        <div class="glass-card" style="padding: 1.5rem;">
+          <h3 style="font-size: 1.2rem; margin-bottom: 1rem;">💰 Sales CRM & Revenue Pipeline</h3>
+          <div id="crmContainer"
+            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem;"></div>
+        </div>
+      </div>
+
+      <!-- TAB 4: Approvals & Company Reports -->
+      <div id="approvalsTab" class="view-tab-content" style="display: none;">
+        <div class="glass-card" style="padding: 1.5rem;">
+          <h3 style="font-size: 1.2rem; margin-bottom: 1rem;">✅ Avinash's Approvals & Directives</h3>
+          <div id="approvalsContainer"></div>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- Right Panel: Real-Time Inter-Agent Stream & Leads -->
+    <aside class="right-panel">
+      <!-- Live Agent Stream Log Box -->
+      <div class="glass-card agent-stream-box">
+        <div class="stream-header">
+          <h4 style="font-size: 0.95rem; display: flex; align-items: center; gap: 0.5rem;">
+            <i data-lucide="message-square-code" style="color: var(--primary-light);"></i> AI Employee Live Chat
+          </h4>
+          <span style="font-size: 0.72rem; color: var(--accent-green); font-weight: 700;">STREAMING</span>
+        </div>
+
+        <div class="stream-log-list" id="agentStreamLogs">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Generated Leads Pipeline Card -->
+      <div class="glass-card" style="padding: 1.25rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+          <h4 style="font-size: 0.9rem;">📥 Scraped Lead Pipeline</h4>
+          <span style="font-size: 0.72rem; color: var(--secondary); font-weight: 700;">AUTO-ROUTED</span>
+        </div>
+
+        <div id="leadListContainer" style="display: flex; flex-direction: column; gap: 0.65rem;">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Employee Detail Modal -->
+  <div class="modal-overlay" id="employeeModal">
+    <div class="modal-container glass-card">
+      <div class="modal-header">
+        <h4 style="font-size: 1.1rem; color: var(--primary-light);">AI Employee Profile & Task Card</h4>
+        <button class="close-btn" onclick="closeModal('employeeModal')">&times;</button>
+      </div>
+      <div id="employeeModalDetails">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Fire / Terminate AI Employee Modal -->
+  <div class="modal-overlay" id="fireModal">
+    <div class="modal-container glass-card"
+      style="max-width: 520px; border-color: rgba(239, 68, 68, 0.45); box-shadow: 0 20px 50px rgba(239, 68, 68, 0.3);">
+      <div class="modal-header">
+        <h4 style="font-size: 1.2rem; color: #f87171; display: flex; align-items: center; gap: 0.5rem; margin: 0;">
+          <span>🔥</span> Terminate AI Employee Contract
+        </h4>
+        <button class="close-btn" onclick="closeModal('fireModal')">&times;</button>
+      </div>
+      <div id="fireModalBody">
+        <!-- Rendered dynamically by openFireModal() -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Hire AI Employee Modal (NexusAI Recruitment Portal) -->
+  <div class="modal-overlay" id="hireModal">
+    <div class="modal-container glass-card" style="max-width: 620px;">
+      <div class="modal-header">
+        <h4 style="font-size: 1.2rem; color: var(--accent-green); display: flex; align-items: center; gap: 0.5rem;">
+          <span>➕</span> Hire New AI Employee (Recruitment Portal)
+        </h4>
+        <button class="close-btn" onclick="closeModal('hireModal')">&times;</button>
+      </div>
+
+      <!-- Quick Presets -->
+      <div style="margin-bottom: 1.25rem;">
+        <label class="form-label" style="color: var(--accent-gold);">⚡ Quick Hire Presets:</label>
+        <div style="display: flex; gap: 0.45rem; flex-wrap: wrap; margin-top: 0.4rem;">
+          <button type="button" class="preset-badge-btn" onclick="applyHirePreset('mobile')">📱 Mobile App Dev</button>
+          <button type="button" class="preset-badge-btn" onclick="applyHirePreset('cyber')">🛡️ Cyber Security
+            AI</button>
+          <button type="button" class="preset-badge-btn" onclick="applyHirePreset('content')">✍️ AI Copywriter</button>
+          <button type="button" class="preset-badge-btn" onclick="applyHirePreset('data')">📊 Data Scientist</button>
+          <button type="button" class="preset-badge-btn" onclick="applyHirePreset('support')">🎧 24/7 Support
+            Agent</button>
+        </div>
+      </div>
+
+      <form id="hireEmployeeForm" onsubmit="submitHireEmployeeForm(event)">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+          <div>
+            <label class="form-label">Employee Name</label>
+            <input type="text" id="hireName" class="form-input" placeholder="e.g. Siddharth Malhotra AI" required>
+          </div>
+          <div>
+            <label class="form-label">Avatar Emoji</label>
+            <select id="hireAvatar" class="form-input">
+              <option value="👨‍💻">👨‍💻 Tech Dev</option>
+              <option value="👩‍💻">👩‍💻 Female Dev</option>
+              <option value="🚀">🚀 Product Lead</option>
+              <option value="🛡️">🛡️ Cyber Expert</option>
+              <option value="📊">📊 Data Scientist</option>
+              <option value="🎨">🎨 UI/UX Designer</option>
+              <option value="✍️">✍️ Content Writer</option>
+              <option value="🎧">🎧 Support Rep</option>
+              <option value="🤖">🤖 Bot Specialist</option>
+              <option value="⚖️">⚖️ Legal AI</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+          <div>
+            <label class="form-label">Designation / Specialization</label>
+            <input type="text" id="hireTitle" class="form-input" placeholder="e.g. Senior Mobile App Architect"
+              required>
+          </div>
+          <div>
+            <label class="form-label">Department</label>
+            <select id="hireDept" class="form-input" required>
+              <option value="Project Bay">💻 Project Bay</option>
+              <option value="Sales Hub">💼 Sales Hub</option>
+              <option value="Marketing Studio">📢 Marketing Studio</option>
+              <option value="Executive Suite">👑 Executive Suite</option>
+              <option value="Support & Operations">🎧 Support & Operations</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+          <div>
+            <label class="form-label">Skill Level</label>
+            <select id="hireLevel" class="form-input">
+              <option value="Senior AI Specialist">Senior AI Specialist</option>
+              <option value="Principal AI Lead">Principal AI Lead</option>
+              <option value="Associate AI Developer">Associate AI Developer</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-label">Monthly Compute Budget</label>
+            <input type="text" id="hireSalary" class="form-input" value="₹35,000 / mo" required>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 1.25rem;">
+          <label class="form-label">Initial Directive / Task</label>
+          <input type="text" id="hireTask" class="form-input"
+            placeholder="e.g. Build iOS & Android React Native apps for client projects" required>
+        </div>
+
+        <div style="display: flex; gap: 0.75rem; justify-content: flex-end;">
+          <button type="button" class="btn btn-sm" style="background: rgba(255,255,255,0.08);"
+            onclick="closeModal('hireModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary" style="background: linear-gradient(135deg, #10b981, #059669);">
+            ✨ Complete Hiring & Deploy to Office
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 🤝 All-Hands Team Meeting Boardroom Modal -->
+  <div class="modal-overlay" id="teamMeetingModal">
+    <div class="modal-container glass-card boardroom-modal-container">
+      <div class="modal-header">
+        <h4 style="font-size: 1.2rem; color: #a855f7; display: flex; align-items: center; gap: 0.5rem;">
+          <span>🤝</span> Conference Room A - Emergency All-Hands Team Meeting
+        </h4>
+        <button class="close-btn" onclick="closeModal('teamMeetingModal')">&times;</button>
+      </div>
+
+      <!-- Virtual Boardroom Seating Grid -->
+      <div class="boardroom-table">
+        <div
+          style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem;">
+          <span
+            style="font-size: 0.85rem; font-weight: 700; color: #818cf8; display: flex; align-items: center; gap: 0.4rem;">
+            <span>👑 Chair:</span> Avinash (Owner / CEO) & Aura (Head Manager AI)
+          </span>
+          <span
+            style="font-size: 0.75rem; color: #10b981; font-weight: 700; background: rgba(16,185,129,0.15); padding: 0.2rem 0.6rem; border-radius: 12px; border: 1px solid rgba(16,185,129,0.3);">
+            ● ALL 14 EMPLOYEES ASSEMBLED
+          </span>
+        </div>
+
+        <div class="boardroom-seats-grid" id="boardroomSeatsContainer">
+          <!-- Rendered dynamically by JS -->
+        </div>
+      </div>
+
+      <!-- Targeted Speaker Status Banner -->
+      <div
+        style="background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 10px; padding: 0.5rem 0.85rem; margin-bottom: 0.6rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.82rem;">
+        <span>🎯 <strong>Direct Speaker:</strong> <span id="currentMeetingSpeakerName"
+            style="color: #10b981; font-weight: 700;">🤖 Aura Sharma (Head Manager AI)</span></span>
+        <span style="font-size: 0.72rem; color: var(--text-muted);">👉 Click any seat or speak an employee's name</span>
+      </div>
+
+      <!-- Live Meeting Briefing & Interactive Chat Area -->
+      <div
+        style="font-size: 0.82rem; font-weight: 700; color: var(--text-sub); text-transform: uppercase; margin-bottom: 0.4rem;">
+        💬 Live Boardroom Discussion (Hinglish & English)
+      </div>
+      <div class="chat-messages-box" id="boardroomChatBox">
+        <div class="chat-bubble chat-bubble-agent">
+          <div class="chat-author-label" style="color: #818cf8;">🤖 Aura Sharma (Head Manager AI)</div>
+          Boss, emergency meeting me sabhi employees aagaye hain! Sabhi department managers ready hain unka work
+          briefing dene ke liye.
+        </div>
+      </div>
+
+      <form id="boardroomChatForm" onsubmit="sendBoardroomDirective(event)" style="display: flex; gap: 0.5rem;">
+        <input type="text" id="boardroomInput" class="form-input"
+          placeholder="Boardroom me bolo ya directive do (e.g. 'Priya sales report do')..." required>
+        <button type="button" id="boardroomMicBtn"
+          onclick="startTargetedVoiceInput('boardroomInput', () => sendBoardroomDirective(), null, 'boardroomMicBtn')"
+          class="btn btn-primary"
+          style="background: rgba(168, 85, 247, 0.2); border: 1px solid rgba(168, 85, 247, 0.5); color: #a855f7; white-space: nowrap;">
+          🎤 Mic
+        </button>
+        <button type="submit" class="btn btn-primary"
+          style="background: linear-gradient(135deg, #a855f7, #6366f1); white-space: nowrap;">
+          🗣️ Speak to Team
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 🚀 Assign New Project Modal -->
+  <div class="modal-overlay" id="assignProjectModal">
+    <div class="modal-container glass-card" style="max-width: 650px;">
+      <div class="modal-header">
+        <h4 style="font-size: 1.25rem; color: #38bdf8; display: flex; align-items: center; gap: 0.5rem;">
+          <span>🚀</span> Assign New Client Project & Launch Autonomous Sprint
+        </h4>
+        <button class="close-btn" onclick="closeModal('assignProjectModal')">&times;</button>
+      </div>
+
+      <!-- Quick Project Presets -->
+      <div style="margin-bottom: 1.25rem;">
+        <label class="form-label" style="color: var(--accent-gold);">⚡ Quick Project Presets:</label>
+        <div style="display: flex; gap: 0.45rem; flex-wrap: wrap; margin-top: 0.4rem;">
+          <button type="button" class="preset-badge-btn" onclick="applyProjectPreset('ecommerce')">🛒 E-Commerce Web
+            Store</button>
+          <button type="button" class="preset-badge-btn" onclick="applyProjectPreset('portfolio')"
+            style="background: rgba(99,102,241,0.2); border-color: rgba(99,102,241,0.5); color: #a5b4fc;">👨‍💻
+            Developer Portfolio</button>
+          <button type="button" class="preset-badge-btn" onclick="applyProjectPreset('mobile')">📱 Mobile SaaS
+            App</button>
+          <button type="button" class="preset-badge-btn" onclick="applyProjectPreset('ai_portal')">🤖 AI Support Agent
+            Bot</button>
+          <button type="button" class="preset-badge-btn" onclick="applyProjectPreset('realestate')">🏢 Real Estate
+            Portal</button>
+          <button type="button" class="preset-badge-btn" onclick="applyProjectPreset('fitness')">🏥 Fitness & Booking
+            Platform</button>
+        </div>
+      </div>
+
+      <form id="assignProjectForm" onsubmit="submitAssignProjectForm(event)">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+          <div>
+            <label class="form-label">Project Title</label>
+            <input type="text" id="projTitle" class="form-input" placeholder="e.g. Nike Modern E-Commerce Store"
+              required>
+          </div>
+          <div>
+            <label class="form-label">Client Name / Business</label>
+            <input type="text" id="projClient" class="form-input" placeholder="e.g. Apex Global Retail Ltd" required>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+          <div>
+            <label class="form-label">Technology Stack</label>
+            <select id="projStack" class="form-input">
+              <option value="React + Node.js + TailwindCSS">React + Node.js + TailwindCSS</option>
+              <option value="Next.js 14 + PostgreSQL + Stripe">Next.js 14 + PostgreSQL + Stripe</option>
+              <option value="Flutter + Firebase + Cloud Functions">Flutter + Firebase + Cloud Functions</option>
+              <option value="PHP / Laravel + MySQL + Blade">PHP / Laravel + MySQL + Blade</option>
+              <option value="Python FastAPI + OpenAI API + React">Python FastAPI + OpenAI API + React</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-label">Project Budget</label>
+            <input type="text" id="projBudget" class="form-input" value="₹1,50,000" required>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 1.25rem;">
+          <label class="form-label">Specific Feature Directives / Requirements</label>
+          <input type="text" id="projRequirements" class="form-input"
+            placeholder="e.g. Cart, Glassmorphic Checkout, Admin Analytics & Razorpay Payment" required>
+        </div>
+
+        <div style="display: flex; gap: 0.75rem; justify-content: flex-end;">
+          <button type="button" class="btn btn-sm" style="background: rgba(255,255,255,0.08);"
+            onclick="closeModal('assignProjectModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary" style="background: linear-gradient(135deg, #06b6d4, #0284c7);">
+            ✨ Launch Sprint & Build Live Deliverable
+          </button>
+        </div>
+      </form>
+    </div>
+    <!-- Dedicated Company Live Server Control Center Modal (Accessible from Anywhere) -->
+    <div id="companyServerModal" class="modal-overlay" style="display: none;">
+      <div class="modal-card" style="max-width: 560px; padding: 1.75rem; max-height: 90vh; overflow-y: auto;">
+        <!-- Modal Header -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+          <div style="display: flex; align-items: center; gap: 0.65rem;">
+            <span style="font-size: 1.5rem;">🌐</span>
+            <div>
+              <h3 style="font-size: 1.15rem; color: var(--text-main); margin: 0; font-weight: 800;">
+                Company Live Server Control Center
+              </h3>
+              <span style="font-size: 0.74rem; color: var(--text-muted);">
+                Public Web Tunnel & Worldwide Access — Avinash Tiwari Office
+              </span>
+            </div>
+          </div>
+          <button class="btn btn-sm" style="background: rgba(255,255,255,0.08); padding: 0.3rem 0.6rem;"
+            onclick="closeCompanyServerModal()">✕</button>
+        </div>
+
+        <!-- Server Status Card inside Modal -->
+        <div
+          style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 1.1rem; margin-bottom: 1rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem;">
+            <span style="font-size: 0.82rem; color: var(--text-muted); font-weight: 600;">Status:</span>
+            <span id="modalServerStatusBadge" class="server-badge offline"
+              style="font-size: 0.72rem; padding: 0.25rem 0.75rem;">
+              <span class="status-offline-dot"></span> LOCAL / READY
+            </span>
+          </div>
+
+          <!-- Target Localhost input -->
+          <div style="margin-bottom: 0.95rem;">
+            <div
+              style="display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.35rem;">
+              <span>Local Server Target URL:</span>
+              <button type="button" class="btn-detect-url" onclick="autoDetectLocalhostUrl(true)"
+                style="padding: 0.2rem 0.55rem; font-size: 0.7rem;">⚡ Detect Localhost</button>
+            </div>
+            <input type="text" id="modalServerLocalhostInput" class="server-url-input"
+              placeholder="http://127.0.0.1:8000/index.html" onchange="onLocalhostInputChange(this.value)"
+              style="width: 100%; font-size: 0.82rem; padding: 0.5rem 0.75rem; margin-bottom: 0.25rem;">
+            <div style="font-size: 0.7rem; color: #64748b; margin-top: 0.2rem;">
+              💡 Running on port 8000 (PHP server) or port 80 (Apache XAMPP).
+            </div>
+          </div>
+
+          <!-- Primary Action Button: Go Live / Stop -->
+          <button type="button" id="modalBtnToggleLiveServer" class="btn-server-action btn-server-start"
+            onclick="toggleCompanyLiveServer()"
+            style="padding: 0.75rem; font-size: 0.92rem; font-weight: 800; border-radius: 8px;">
+            🚀 Go Live & Publish Server to Internet
+          </button>
+        </div>
+
+        <!-- Live Details Banner (when live) -->
+        <div id="modalServerLiveDetailsBox"
+          style="display: none; background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 12px; padding: 1.1rem; margin-bottom: 1rem;">
+          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+            <span class="pulse-radar-dot"></span>
+            <span style="font-size: 0.8rem; font-weight: 800; color: #34d399; letter-spacing: 0.5px;">PUBLIC LIVE LINK
+              (WORLDWIDE):</span>
+          </div>
+          <div
+            style="background: rgba(0,0,0,0.55); padding: 0.65rem 0.85rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); margin-bottom: 0.75rem; word-break: break-all;">
+            <a id="modalServerLiveUrlDisplay" href="#" target="_blank"
+              style="font-family: var(--font-mono); font-size: 0.95rem; font-weight: 700; color: #38bdf8; text-decoration: none;">
+              https://nexusai-avinash-office.live
+            </a>
+          </div>
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <button class="btn btn-primary btn-sm" onclick="openCompanyLiveUrl()"
+              style="background: linear-gradient(135deg, #06b6d4, #0284c7); flex: 1; justify-content: center;">
+              🌐 Open Live Link
+            </button>
+            <button class="btn btn-primary btn-sm" onclick="copyCompanyLiveUrl()"
+              style="background: linear-gradient(135deg, #10b981, #059669); flex: 1; justify-content: center;">
+              📋 Copy Link
+            </button>
+            <button class="btn btn-sm" onclick="openServerQrModal()"
+              style="background: rgba(255,255,255,0.1); flex: 1; justify-content: center;">
+              📱 Mobile QR
+            </button>
+          </div>
+        </div>
+
+        <!-- Deployment Terminal Logs -->
+        <div style="margin-bottom: 1rem;">
+          <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; margin-bottom: 0.35rem;">Real-time
+            Deployment Log:</div>
+          <div id="modalServerDeploymentLog" class="server-log-terminal"
+            style="display: block; min-height: 80px; max-height: 140px; overflow-y: auto;">
+            <div style="color: #64748b; font-size: 0.72rem; font-family: var(--font-mono);">[System Ready] Click "Go
+              Live & Publish" to expose your office to the public web.</div>
+          </div>
+        </div>
+
+        <!-- Google SEO & Free BAT Guide Row -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+          <button type="button" class="btn btn-sm" onclick="pingGoogleAndSearchEngines()"
+            style="background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.35); color: #818cf8; justify-content: center; padding: 0.6rem; font-weight: 600;">
+            🔍 Submit to Google & Bing
+          </button>
+          <button type="button" class="btn btn-sm" onclick="openTunnelHelperModal()"
+            style="background: rgba(6, 182, 212, 0.15); border: 1px solid rgba(6, 182, 212, 0.35); color: #38bdf8; justify-content: center; padding: 0.6rem; font-weight: 600;">
+            ⚡ 1-Click BAT Guide
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Server Mobile QR Code Modal -->
+    <div id="serverQrModal" class="modal-overlay" style="display: none;">
+      <div class="modal-card" style="max-width: 420px; text-align: center; padding: 1.75rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+          <h3 style="font-size: 1.1rem; color: var(--text-main); display: flex; align-items: center; gap: 0.5rem;">
+            📱 Mobile QR Code Scanner
+          </h3>
+          <button class="btn btn-sm" style="background: rgba(255,255,255,0.08); padding: 0.25rem 0.5rem;"
+            onclick="closeServerQrModal()">✕</button>
+        </div>
+
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.25rem;">
+          Scan this QR code using your smartphone camera or QR reader to open your office live from anywhere!
+        </p>
+
+        <div
+          style="background: #ffffff; padding: 1rem; border-radius: 14px; display: inline-block; margin-bottom: 1rem; box-shadow: 0 8px 25px rgba(0,0,0,0.5);">
+          <img id="serverQrImage" src="" alt="Office Server QR Code"
+            style="width: 220px; height: 220px; display: block; border-radius: 6px;">
+        </div>
+
+        <div
+          style="background: rgba(0,0,0,0.4); padding: 0.5rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 1.25rem;">
+          <span id="serverQrUrlDisplay"
+            style="font-family: var(--font-mono); font-size: 0.76rem; color: #38bdf8; word-break: break-all;"></span>
+        </div>
+
+        <div style="display: flex; gap: 0.5rem; justify-content: center;">
+          <button class="btn btn-primary btn-sm" onclick="copyCompanyLiveUrl()"
+            style="background: linear-gradient(135deg, #10b981, #059669);">
+            📋 Copy Live Link
+          </button>
+          <button class="btn btn-sm" style="background: rgba(255,255,255,0.1);" onclick="closeServerQrModal()">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Free Live Tunnel Guide Modal -->
+    <div id="serverTunnelGuideModal" class="modal-overlay" style="display: none;">
+      <div class="modal-card" style="max-width: 520px; padding: 1.75rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+          <h3 style="font-size: 1.1rem; color: var(--text-main); display: flex; align-items: center; gap: 0.5rem;">
+            ⚡ 1-Click Free Windows Tunnel Launcher
+          </h3>
+          <button class="btn btn-sm" style="background: rgba(255,255,255,0.08); padding: 0.25rem 0.5rem;"
+            onclick="closeTunnelHelperModal()">✕</button>
+        </div>
+
+        <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1rem;">
+          Your office project already contains <code
+            style="color: #38bdf8; background: rgba(0,0,0,0.4); padding: 2px 6px; border-radius: 4px;">START_PUBLIC_LIVE_TUNNEL.bat</code>.
+          Double clicking it creates an instant public HTTPS tunnel for your Localhost with <strong>zero signup or
+            payment</strong>!
+        </p>
+
+        <div
+          style="background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 1rem; margin-bottom: 1rem; font-family: var(--font-mono); font-size: 0.78rem;">
+          <div style="color: #94a3b8; margin-bottom: 0.4rem;"># Double click in your project directory:</div>
+          <div style="color: #34d399; font-weight: 700;">c:\xampp\htdocs\ai-virtual-office\START_PUBLIC_LIVE_TUNNEL.bat
+          </div>
+          <div style="color: #94a3b8; margin-top: 0.6rem; margin-bottom: 0.4rem;"># Or run in PowerShell / Command
+            Prompt:</div>
+          <div style="color: #38bdf8;">npx -y localtunnel --port 8000</div>
+        </div>
+
+        <div
+          style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 8px; padding: 0.75rem; margin-bottom: 1.25rem; font-size: 0.78rem; color: #a7f3d0;">
+          💡 <strong>How it works:</strong> Localtunnel gives you a public HTTPS URL (like
+          <code>https://curvy-lion-42.loca.lt</code>) that forwards all requests to your local computer's port 8000 or
+          Apache port 80.
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 0.5rem;">
+          <button class="btn btn-primary btn-sm" onclick="closeTunnelHelperModal()"
+            style="background: linear-gradient(135deg, #06b6d4, #0284c7);">
+            Understood & Done
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="assets/js/agents.js"></script>
+    <script src="assets/js/three_office.js"></script>
+    <script src="assets/js/canvas_office.js"></script>
+    <script src="assets/js/leadgen.js"></script>
+    <script src="assets/js/tasks_crm.js"></script>
+    <script src="assets/js/office.js"></script>
+    <script src="assets/js/voice.js"></script>
+    <script src="assets/js/command.js"></script>
+    <script src="assets/js/lock_system.js"></script>
+    <script src="assets/js/company_server.js"></script>
+
+    <script>
+      // Initialize Lucide Icons & Tab Switcher
+      lucide.createIcons();
+
+      function setOfficeFloorMode(mode) {
+        const c2D = document.getElementById('canvasWrapper2D');
+        const c3D = document.getElementById('threeCanvasContainer');
+        const ctrl3D = document.getElementById('threeControlsBar');
+        const btn2D = document.getElementById('viewMode2DBtn');
+        const btn3D = document.getElementById('viewMode3DBtn');
+
+        if (mode === '3D') {
+          if (c2D) c2D.style.display = 'none';
+          if (c3D) c3D.style.display = 'block';
+          if (ctrl3D) ctrl3D.style.display = 'flex';
+          if (btn2D) {
+            btn2D.style.background = 'transparent';
+            btn2D.style.color = 'var(--text-muted)';
+          }
+          if (btn3D) {
+            btn3D.style.background = 'linear-gradient(135deg, #6366f1, #4f46e5)';
+            btn3D.style.color = 'white';
+          }
+          if (!isThreeInitialized && typeof initThreeOffice === 'function') {
+            initThreeOffice();
+          } else if (typeof onThreeWindowResize === 'function') {
+            setTimeout(onThreeWindowResize, 100);
+          }
+        } else {
+          if (c2D) c2D.style.display = 'block';
+          if (c3D) c3D.style.display = 'none';
+          if (ctrl3D) ctrl3D.style.display = 'none';
+          if (btn2D) {
+            btn2D.style.background = 'linear-gradient(135deg, #6366f1, #4f46e5)';
+            btn2D.style.color = 'white';
+          }
+          if (btn3D) {
+            btn3D.style.background = 'transparent';
+            btn3D.style.color = 'var(--text-muted)';
+          }
+          setTimeout(resizeCanvas, 100);
+        }
+      }
+
+      function switchViewTab(tabId) {
+        document.querySelectorAll('.view-tab-content').forEach(tab => tab.style.display = 'none');
+        document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+
+        const targetTab = document.getElementById(tabId);
+        if (targetTab) targetTab.style.display = 'block';
+
+        if (event && event.currentTarget) {
+          event.currentTarget.classList.add('active');
+        }
+
+        if (tabId === 'officeTab') {
+          setTimeout(resizeCanvas, 100);
+        }
+      }
+    </script>
+</body>
+
+</html>

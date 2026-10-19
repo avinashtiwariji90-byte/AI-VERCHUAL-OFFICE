@@ -1,0 +1,10 @@
+# NexusAI Corporate Office - Robots.txt
+# Allowing all major search engines (Google, Bing, Yahoo, DuckDuckGo) to crawl and index
+
+User-agent: *
+Allow: /
+Disallow: /api/config.php
+
+# Sitemaps
+Sitemap: https://nexusai-avinash-office.live/sitemap.xml
+Sitemap: http://localhost/ai-virtual-office/sitemap.xml
