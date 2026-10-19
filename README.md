@@ -53,17 +53,3 @@ ai-virtual-office/
         ├── three_office.js
         └── voice.js
 ```
-
----
-
-## 🌐 URLs
-
-| Page | URL |
-|------|-----|
-| Main App | http://localhost/ai-virtual-office/ |
-| Lead Gen | http://localhost/ai-virtual-office/leadgen.html |
-| Preview | http://localhost/ai-virtual-office/project_preview.html |
-
----
-
-*Made with ❤️ - AI Virtual Office*
